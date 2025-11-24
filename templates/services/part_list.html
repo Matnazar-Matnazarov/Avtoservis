@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Ehtiyot qismlar{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">Ehtiyot qismlar</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Zapchastlar ro'yxati va ularning skladdagi qoldig'i
+        </p>
+    </div>
+    <a href="{% url 'apps:part_create' %}"
+       class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+        + Yangi detal
+    </a>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-xs sm:text-sm">
+            <thead class="bg-slate-900/80 text-slate-300">
+            <tr>
+                <th class="px-3 py-2 text-left font-medium">Nomi</th>
+                <th class="px-3 py-2 text-left font-medium">Artikul</th>
+                <th class="px-3 py-2 text-right font-medium">Narx</th>
+                <th class="px-3 py-2 text-right font-medium">Qoldiq</th>
+                <th class="px-3 py-2 text-right font-medium"></th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+            {% for part in parts %}
+                <tr>
+                    <td class="px-3 py-2 text-slate-100">{{ part.name }}</td>
+                    <td class="px-3 py-2 text-slate-300">{{ part.article }}</td>
+                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                        {{ part.price|floatformat:0 }} so'm
+                    </td>
+                    <td class="px-3 py-2 text-right text-slate-100">
+                        {{ part.stock_quantity }}
+                    </td>
+                    <td class="px-3 py-2 text-right">
+                        <a href="{% url 'apps:part_update' part.pk %}"
+                           class="text-xs text-emerald-400 hover:text-emerald-300">
+                            Tahrirlash
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="px-3 py-4 text-center text-slate-500">
+                        Ehtiyot qismlar hozircha kiritilmagan
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

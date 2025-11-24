@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Ustalar{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">Ustalar</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Servisdagi barcha ustalar ro'yxati
+        </p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="{% url 'apps:master_workload' %}"
+           class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+            Yuklanish
+        </a>
+        <a href="{% url 'apps:master_create' %}"
+           class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+            + Yangi usta
+        </a>
+    </div>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-xs sm:text-sm">
+            <thead class="bg-slate-900/80 text-slate-300">
+            <tr>
+                <th class="px-3 py-2 text-left font-medium">Usta</th>
+                <th class="px-3 py-2 text-left font-medium">Telefon</th>
+                <th class="px-3 py-2 text-left font-medium">Mutaxassisligi</th>
+                <th class="px-3 py-2 text-right font-medium"></th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+            {% for master in masters %}
+                <tr>
+                    <td class="px-3 py-2 text-slate-100">{{ master.full_name }}</td>
+                    <td class="px-3 py-2 text-slate-300">{{ master.phone }}</td>
+                    <td class="px-3 py-2 text-slate-300">{{ master.specialization }}</td>
+                    <td class="px-3 py-2 text-right">
+                        <a href="{% url 'apps:master_update' master.pk %}"
+                           class="text-xs text-emerald-400 hover:text-emerald-300">
+                            Tahrirlash
+                        </a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="px-3 py-4 text-center text-slate-500">
+                        Ustalar hozircha kiritilmagan
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+

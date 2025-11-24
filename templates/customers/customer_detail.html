@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Mijoz: {{ customer.full_name }}{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <div>
+        <h1 class="text-xl font-semibold text-white">Mijoz: {{ customer.full_name }}</h1>
+        <p class="text-xs text-slate-400 mt-1">
+            Telefon: {{ customer.phone }}
+            {% if customer.telegram_username %} · Telegram: @{{ customer.telegram_username }}{% endif %}
+        </p>
+    </div>
+    <div class="flex flex-wrap gap-2 text-xs">
+        <a href="{% url 'apps:customer_update' customer.pk %}"
+           class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+            Tahrirlash
+        </a>
+        <a href="{% url 'apps:car_create' %}?customer={{ customer.pk }}"
+           class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+            Mashina qo'shish
+        </a>
+        <a href="{% url 'apps:order_create' %}?customer={{ customer.pk }}"
+           class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+            Buyurtma yaratish
+        </a>
+    </div>
+</div>
+
+<div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 mb-4">
+    <h2 class="text-sm font-semibold text-slate-200 mb-2">Mashinalar va buyurtmalar tarixi</h2>
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-xs sm:text-sm">
+            <thead class="bg-slate-900/70 text-slate-300">
+            <tr>
+                <th class="px-3 py-2 text-left font-medium">Sana</th>
+                <th class="px-3 py-2 text-left font-medium">Mashina</th>
+                <th class="px-3 py-2 text-left font-medium">Status</th>
+                <th class="px-3 py-2 text-right font-medium">Umumiy summa</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+            {% for order in orders %}
+                <tr class="hover:bg-slate-900/70 cursor-pointer"
+                    onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
+                    <td class="px-3 py-2 text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="px-3 py-2 text-slate-100">
+                        {{ order.car.plate_number }} · {{ order.car.brand }} {{ order.car.model }}
+                    </td>
+                    <td class="px-3 py-2">
+                        {% if order.status == "new" %}
+                            <span class="status-badge-new">Yangi</span>
+                        {% elif order.status == "in_progress" %}
+                            <span class="status-badge-in_progress">Jarayonda</span>
+                        {% elif order.status == "checking" %}
+                            <span class="status-badge-checking">Tekshirilmoqda</span>
+                        {% elif order.status == "completed" %}
+                            <span class="status-badge-completed">Yakunlangan</span>
+                        {% else %}
+                            <span class="inline-flex items-center rounded-full bg-slate-700 px-2 py-0.5 text-xs text-white">
+                                {{ order.get_status_display }}
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                        {{ order.total_amount|floatformat:0 }} so'm
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="4" class="px-3 py-4 text-center text-slate-500">
+                        Hozircha buyurtmalar yo'q
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<a href="{% url 'apps:customer_list' %}"
+   class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+    ← Mijozlar ro'yxatiga qaytish
+</a>
+{% endblock %}
+
+

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{% if master %}Usta tahrirlash{% else %}Yangi usta{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-xl font-semibold text-white mb-4">
+        {% if master %}Usta tahrirlash{% else %}Yangi usta qo'shish{% endif %}
+    </h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">FIO</label>
+            {{ form.full_name }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Telefon</label>
+            {{ form.phone }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Mutaxassisligi</label>
+            {{ form.specialization }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Bog'langan foydalanuvchi (ixtiyoriy)</label>
+            {{ form.user }}
+        </div>
+        <div class="flex justify-between mt-4">
+            <a href="{% url 'apps:master_list' %}"
+               class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+                ← Ustalar ro'yxati
+            </a>
+            <button type="submit"
+                    class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+                Saqlash
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

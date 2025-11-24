@@ -1,0 +1,180 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Avto Servis{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#0f766e',
+                            600: '#0d645d',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+    <style>
+        /* Tailwind CDN @apply ishlamaydi, shu sababli oddiy CSS bilan badge-style beramiz */
+        .status-badge-new,
+        .status-badge-in_progress,
+        .status-badge-checking,
+        .status-badge-completed {
+            border-radius: 9999px;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            line-height: 1;
+            display: inline-flex;
+            align-items: center;
+        }
+        .status-badge-new {
+            background-color: rgb(100 116 139); /* slate-500 */
+            color: white;
+        }
+        .status-badge-in_progress {
+            background-color: rgb(250 204 21); /* amber-400 */
+            color: rgb(15 23 42); /* slate-900 */
+        }
+        .status-badge-checking {
+            background-color: rgb(34 211 238); /* cyan-400 */
+            color: rgb(15 23 42);
+        }
+        .status-badge-completed {
+            background-color: rgb(16 185 129); /* emerald-500 */
+            color: white;
+        }
+
+        /* Theme (dark / light) */
+        body[data-theme="dark"] {
+            background-color: rgb(2 6 23); /* slate-950 */
+            color: rgb(241 245 249); /* slate-100 */
+        }
+        body[data-theme="light"] {
+            background-color: rgb(248 250 252); /* slate-50 */
+            color: rgb(15 23 42); /* slate-900 */
+        }
+        body[data-theme="light"] .bg-slate-950\/60,
+        body[data-theme="light"] .bg-slate-950 {
+            background-color: white !important;
+        }
+        body[data-theme="light"] .border-slate-800 {
+            border-color: rgb(203 213 225) !important; /* slate-300 */
+        }
+        body[data-theme="light"] .text-slate-100,
+        body[data-theme="light"] .text-slate-200 {
+            color: rgb(15 23 42) !important;
+        }
+        body[data-theme="light"] .text-slate-300 {
+            color: rgb(71 85 105) !important;
+        }
+        body[data-theme="light"] .text-slate-400,
+        body[data-theme="light"] .text-slate-500 {
+            color: rgb(100 116 139) !important;
+        }
+    </style>
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="min-h-screen text-slate-100" data-theme="dark">
+<div class="min-h-screen flex flex-col">
+    <header class="border-b border-slate-800 bg-slate-950/80 backdrop-blur">
+        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-6">
+                <a href="{% url 'apps:order_list' %}" class="inline-flex items-center gap-2">
+                    <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/50">
+                        <span class="text-lg">🚗</span>
+                    </span>
+                    <span class="font-semibold tracking-tight text-sm sm:text-base">Avto Servis Panel</span>
+                </a>
+                <nav class="hidden sm:flex items-center gap-4 text-xs sm:text-sm text-slate-300">
+                    <a href="{% url 'apps:order_list' %}" class="hover:text-white transition">
+                        Buyurtmalar
+                    </a>
+                    <a href="{% url 'apps:customer_list' %}" class="hover:text-white transition">
+                        Mijozlar
+                    </a>
+                    <a href="{% url 'apps:car_list' %}" class="hover:text-white transition">
+                        Mashinalar
+                    </a>
+                    <a href="{% url 'apps:master_list' %}" class="hover:text-white transition">
+                        Ustalar
+                    </a>
+                    <a href="{% url 'apps:service_list' %}" class="hover:text-white transition">
+                        Xizmatlar
+                    </a>
+                    <a href="{% url 'apps:part_list' %}" class="hover:text-white transition">
+                        Detallar
+                    </a>
+                </nav>
+            </div>
+            <div class="flex items-center gap-3 text-xs sm:text-sm">
+                {% if request.user.is_authenticated %}
+                    <span class="hidden sm:inline-flex items-center gap-1 text-slate-400">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        {{ request.user.get_full_name|default:request.user.username }}
+                    </span>
+                    <a href="{% url 'logout' %}"
+                       class="inline-flex items-center rounded-full border border-slate-700 px-3 py-1 text-xs font-medium text-slate-300 hover:bg-slate-800 transition">
+                        Chiqish
+                    </a>
+                {% endif %}
+                <button type="button" id="theme-toggle"
+                        class="inline-flex items-center rounded-full border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-slate-800 transition">
+                    🌙
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-1">
+        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
+            {% if messages %}
+                <div class="mb-4 space-y-2">
+                    {% for message in messages %}
+                        <div class="rounded-lg border px-3 py-2 text-xs sm:text-sm
+                                    {% if message.tags == 'success' %}border-emerald-600 bg-emerald-500/10 text-emerald-200
+                                    {% elif message.tags == 'error' or message.tags == 'danger' %}border-red-600 bg-red-500/10 text-red-200
+                                    {% else %}border-slate-600 bg-slate-800/60 text-slate-200{% endif %}">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
+</div>
+
+{% block extra_js %}{% endblock %}
+<script>
+    (function () {
+        const body = document.body;
+        const stored = localStorage.getItem('theme');
+        if (stored === 'light') {
+            body.dataset.theme = 'light';
+        }
+        const btn = document.getElementById('theme-toggle');
+        if (btn) {
+            const syncIcon = () => {
+                btn.textContent = body.dataset.theme === 'light' ? '☀️' : '🌙';
+            };
+            syncIcon();
+            btn.addEventListener('click', function () {
+                body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
+                localStorage.setItem('theme', body.dataset.theme);
+                syncIcon();
+            });
+        }
+    })();
+</script>
+</body>
+</html>
+
+

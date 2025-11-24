@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{% if part %}Detal tahrirlash{% else %}Yangi detal{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-md mx-auto">
+    <h1 class="text-xl font-semibold text-white mb-4">
+        {% if part %}Detal tahrirlash{% else %}Yangi ehtiyot qism qo'shish{% endif %}
+    </h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Nomi</label>
+            {{ form.name }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Artikul</label>
+            {{ form.article }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Narx</label>
+            {{ form.price }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1">Sklad qoldig'i</label>
+            {{ form.stock_quantity }}
+        </div>
+        <div class="flex justify-between mt-4">
+            <a href="{% url 'apps:part_list' %}"
+               class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+                ← Ehtiyot qismlar ro'yxati
+            </a>
+            <button type="submit"
+                    class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+                Saqlash
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
+
+

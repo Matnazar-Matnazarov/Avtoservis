@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}{% if order %}Buyurtmani tahrirlash{% else %}Yangi buyurtma{% endif %}{% endblock %}
+
+{% block content %}
+<div class="mb-4 flex items-center justify-between">
+    <h1 class="text-xl font-semibold text-white">
+        {% if order %}Buyurtmani tahrirlash #{{ order.id }}{% else %}Yangi buyurtma{% endif %}
+    </h1>
+</div>
+
+<form method="post" enctype="multipart/form-data" class="space-y-6">
+    {% csrf_token %}
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+            <h2 class="text-sm font-semibold text-slate-200 mb-2">Asosiy ma'lumotlar</h2>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Mijoz</label>
+                {{ form.customer }}
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Mashina</label>
+                {{ form.car }}
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Usta</label>
+                {{ form.master }}
+            </div>
+        </div>
+
+        <div class="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+            <h2 class="text-sm font-semibold text-slate-200 mb-2">Holat va to'lov</h2>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">Status</label>
+                {{ form.status }}
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">To'lov holati</label>
+                {{ form.payment_status }}
+            </div>
+            <div>
+                <label class="block text-xs font-medium text-slate-300 mb-1">To'lov turi</label>
+                {{ form.payment_type }}
+            </div>
+        </div>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+        <label class="block text-xs font-medium text-slate-300 mb-1">Muammo tavsifi</label>
+        {{ form.description }}
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-200">Xizmatlar</h2>
+        {{ service_formset.management_form }}
+        {% for f in service_formset %}
+            <div class="grid grid-cols-1 md:grid-cols-5 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+                 data-formset-prefix="services">
+                {{ f.id }}
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Xizmat</label>
+                    {{ f.service }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Status</label>
+                    {{ f.status }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Son</label>
+                    {{ f.quantity }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Narx</label>
+                    {{ f.price }}
+                </div>
+                {% if f.DELETE %}
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                        {{ f.DELETE }} <span>O'chirish</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="button" id="add-service-row"
+                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            + Xizmat qo'shish
+        </button>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-200">Ehtiyot qismlar</h2>
+        {{ part_formset.management_form }}
+        {% for f in part_formset %}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+                 data-formset-prefix="parts">
+                {{ f.id }}
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Detal</label>
+                    {{ f.part }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Son</label>
+                    {{ f.quantity }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Narx</label>
+                    {{ f.price }}
+                </div>
+                {% if f.DELETE %}
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                        {{ f.DELETE }} <span>O'chirish</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="button" id="add-part-row"
+                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            + Detal qo'shish
+        </button>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-200">Fotosuratlar</h2>
+        {{ photo_formset.management_form }}
+        {% for f in photo_formset %}
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+                 data-formset-prefix="photos">
+                {{ f.id }}
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Rasm</label>
+                    {{ f.image }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Oldin/Keyin</label>
+                    {{ f.is_before }}
+                </div>
+                {% if f.DELETE %}
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                        {{ f.DELETE }} <span>O'chirish</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="button" id="add-photo-row"
+                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            + Foto qo'shish
+        </button>
+    </div>
+
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
+        <h2 class="text-sm font-semibold text-slate-200">To'lovlar jadvali</h2>
+        <p class="text-[11px] text-slate-400">
+            Buyurtma bo'yicha bo'lib-bo'lib to'lovlarni kiriting. To'liq to'langanda holat avtomatik yangilanadi.
+        </p>
+        {{ payment_formset.management_form }}
+        {% for f in payment_formset %}
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+                 data-formset-prefix="payments">
+                {{ f.id }}
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Miqdor</label>
+                    {{ f.amount }}
+                </div>
+                <div>
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Turi</label>
+                    {{ f.payment_type }}
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-xs font-medium text-slate-300 mb-1">Izoh</label>
+                    {{ f.note }}
+                </div>
+                {% if f.DELETE %}
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                        {{ f.DELETE }} <span>O'chirish</span>
+                    </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <button type="button" id="add-payment-row"
+                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+            + To'lov qo'shish
+        </button>
+    </div>
+
+    <div class="flex justify-end gap-2">
+        <a href="{% if order %}{% url 'apps:order_detail' order.pk %}{% else %}{% url 'apps:order_list' %}{% endif %}"
+           class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+            Bekor qilish
+        </a>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+            Saqlash
+        </button>
+    </div>
+</form>
+{% endblock %}
+
+{% block extra_js %}
+{{ block.super }}
+<script>
+    function setupFormsetAddButton(prefix, addButtonId) {
+        const addBtn = document.getElementById(addButtonId);
+        if (!addBtn) return;
+        addBtn.addEventListener('click', function () {
+            const totalFormsInput = document.querySelector(`input[name=\"${prefix}-TOTAL_FORMS\"]`);
+            const total = parseInt(totalFormsInput.value, 10);
+            const formRows = document.querySelectorAll(`div[data-formset-prefix=\"${prefix}\"]`);
+            const lastRow = formRows[formRows.length - 1];
+            const newRow = lastRow.cloneNode(true);
+
+            newRow.querySelectorAll('input, select').forEach(function (el) {
+                if (el.name) {
+                    el.name = el.name.replace(`${prefix}-${total - 1}-`, `${prefix}-${total}-`);
+                }
+                if (el.id) {
+                    el.id = el.id.replace(`${prefix}-${total - 1}-`, `${prefix}-${total}-`);
+                }
+                if (el.type === 'checkbox' || el.type === 'radio') {
+                    el.checked = false;
+                } else {
+                    el.value = '';
+                }
+            });
+
+            lastRow.parentNode.insertBefore(newRow, addBtn);
+            totalFormsInput.value = total + 1;
+        });
+    }
+
+    setupFormsetAddButton('services', 'add-service-row');
+    setupFormsetAddButton('parts', 'add-part-row');
+    setupFormsetAddButton('photos', 'add-photo-row');
+    setupFormsetAddButton('payments', 'add-payment-row');
+</script>
+{% endblock %}

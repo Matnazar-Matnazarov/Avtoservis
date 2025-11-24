@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}{% if customer %}Mijozni tahrirlash{% else %}Yangi mijoz{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-xl font-semibold text-white mb-4">
+        {% if customer %}Mijozni tahrirlash{% else %}Yangi mijoz qo'shish{% endif %}
+    </h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.full_name.id_for_label }}">FIO</label>
+            <input type="text" name="{{ form.full_name.html_name }}" id="{{ form.full_name.id_for_label }}"
+                   value="{{ form.full_name.value|default_if_none:'' }}"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+                   placeholder="Ism Familiya">
+            {{ form.full_name.errors }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.phone.id_for_label }}">Telefon</label>
+            <input type="text" name="{{ form.phone.html_name }}" id="{{ form.phone.id_for_label }}"
+                   value="{{ form.phone.value|default_if_none:'' }}"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+                   placeholder="+998...">
+            {{ form.phone.errors }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.telegram_username.id_for_label }}">Telegram username</label>
+            <input type="text" name="{{ form.telegram_username.html_name }}" id="{{ form.telegram_username.id_for_label }}"
+                   value="{{ form.telegram_username.value|default_if_none:'' }}"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 placeholder-slate-500"
+                   placeholder="@username">
+            {{ form.telegram_username.errors }}
+        </div>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+            Saqlash
+        </button>
+    </form>
+</div>
+{% endblock %}

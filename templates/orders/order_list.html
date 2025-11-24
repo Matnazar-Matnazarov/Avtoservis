@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+
+{% block title %}Buyurtmalar ro'yxati{% endblock %}
+
+{% block content %}
+<div class="flex items-center justify-between mb-6">
+    <div>
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">Buyurtmalar</h1>
+        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+            Telefon, mashina raqami va sana bo'yicha buyurtmalarni tezkor qidirish
+        </p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="{% url 'apps:customer_create' %}"
+           class="hidden sm:inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+            + Mijoz
+        </a>
+        <a href="{% url 'apps:order_create' %}"
+           class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+            + Yangi buyurtma
+        </a>
+    </div>
+</div>
+
+<form method="get" class="mb-5">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Telefon</label>
+            <input type="text" name="phone"
+                   value="{{ filter.phone }}"
+                   placeholder="+998..."
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        </div>
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Mashina raqami</label>
+            <input type="text" name="plate"
+                   value="{{ filter.plate }}"
+                   placeholder="01A123BC"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        </div>
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Status</label>
+            <select name="status"
+                    class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+                <option value="">Hammasi</option>
+                <option value="new" {% if filter.status == "new" %}selected{% endif %}>Yangi</option>
+                <option value="in_progress" {% if filter.status == "in_progress" %}selected{% endif %}>Jarayonda</option>
+                <option value="checking" {% if filter.status == "checking" %}selected{% endif %}>Tekshirilmoqda</option>
+                <option value="completed" {% if filter.status == "completed" %}selected{% endif %}>Yakunlangan</option>
+            </select>
+        </div>
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Sana dan</label>
+            <input type="date" name="date_from"
+                   value="{{ filter.date_from }}"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        </div>
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Sana gacha</label>
+            <input type="date" name="date_to"
+                   value="{{ filter.date_to }}"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        </div>
+        <div class="space-y-1">
+            <label class="block text-xs font-medium text-slate-300">Tezkor qidiruv</label>
+            <input type="text" name="q"
+                   value="{{ filter.q }}"
+                   placeholder="Telefon yoki raqam"
+                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        </div>
+    </div>
+    <div class="flex justify-end gap-2 mt-3">
+        <a href="."
+           class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+            Tozalash
+        </a>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40 transition">
+            Qidirish
+        </button>
+    </div>
+</form>
+
+<div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/60 shadow-xl shadow-black/50">
+    <div class="overflow-x-auto">
+        <table class="min-w-full text-left text-xs sm:text-sm">
+            <thead class="bg-slate-900/80 border-b border-slate-800 text-slate-300">
+            <tr>
+                <th class="px-3 py-2 font-medium">ID</th>
+                <th class="px-3 py-2 font-medium">Sana</th>
+                <th class="px-3 py-2 font-medium">Mijoz</th>
+                <th class="px-3 py-2 font-medium">Telefon</th>
+                <th class="px-3 py-2 font-medium">Mashina</th>
+                <th class="px-3 py-2 font-medium">Status</th>
+                <th class="px-3 py-2 font-medium">To'lov holati</th>
+                <th class="px-3 py-2 font-medium text-right">Umumiy summa</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-800">
+            {% for order in orders %}
+                <tr class="hover:bg-slate-900/70 cursor-pointer"
+                    onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
+                    <td class="px-3 py-2 text-slate-300">#{{ order.id }}</td>
+                    <td class="px-3 py-2 text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="px-3 py-2 text-slate-100">{{ order.customer.full_name }}</td>
+                    <td class="px-3 py-2 text-slate-300">{{ order.customer.phone }}</td>
+                    <td class="px-3 py-2 text-slate-300">
+                        {{ order.car.plate_number }} · {{ order.car.brand }} {{ order.car.model }}
+                    </td>
+                    <td class="px-3 py-2">
+                        {% if order.status == "new" %}
+                            <span class="status-badge-new">Yangi</span>
+                        {% elif order.status == "in_progress" %}
+                            <span class="status-badge-in_progress">Jarayonda</span>
+                        {% elif order.status == "checking" %}
+                            <span class="status-badge-checking">Tekshirilmoqda</span>
+                        {% elif order.status == "completed" %}
+                            <span class="status-badge-completed">Yakunlangan</span>
+                        {% else %}
+                            <span class="inline-flex items-center rounded-full bg-slate-700 px-2 py-0.5 text-xs text-white">
+                                {{ order.get_status_display }}
+                            </span>
+                        {% endif %}
+                    </td>
+                    <td class="px-3 py-2 text-slate-200">
+                        {{ order.get_payment_status_display }}
+                    </td>
+                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                        {{ order.total_amount|floatformat:0 }} so'm
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="8" class="px-3 py-6 text-center text-slate-500">
+                        Buyurtmalar topilmadi
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,103 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kirish – Avto Servis</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            500: '#0f766e',
+                            600: '#0d645d',
+                        },
+                    },
+                },
+            },
+        }
+    </script>
+</head>
+<body class="min-h-screen bg-slate-950 flex items-center justify-center px-4">
+<div class="w-full max-w-md">
+    <div class="text-center mb-8">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-2xl bg-emerald-500/10 ring-1 ring-emerald-500/40 mb-3">
+            <span class="text-2xl">🚗</span>
+        </div>
+        <h1 class="text-2xl font-semibold text-white tracking-tight">Avto Servis Panel</h1>
+        <p class="text-sm text-slate-400 mt-1">Xizmatlarni boshqarish uchun tizimga kiring</p>
+    </div>
+
+    <div class="bg-slate-900/80 border border-slate-800 rounded-2xl shadow-2xl shadow-emerald-500/10 p-6 backdrop-blur">
+        {% if form.non_field_errors %}
+            <div class="mb-4 text-sm text-red-400 bg-red-500/10 border border-red-500/40 rounded-lg px-3 py-2">
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <form method="post" class="space-y-4">
+            {% csrf_token %}
+
+            <div>
+                <label for="{{ form.username.id_for_label }}" class="block text-sm font-medium text-slate-200 mb-1">
+                    Login
+                </label>
+                <input
+                    type="text"
+                    name="{{ form.username.html_name }}"
+                    id="{{ form.username.id_for_label }}"
+                    value="{{ form.username.value|default:'' }}"
+                    class="block w-full rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60 outline-none placeholder-slate-500"
+                    placeholder="admin"
+                    autocomplete="username"
+                >
+                {% if form.username.errors %}
+                    <p class="mt-1 text-xs text-red-400">
+                        {{ form.username.errors.0 }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <div>
+                <div class="flex items-center justify-between mb-1">
+                    <label for="{{ form.password.id_for_label }}" class="block text-sm font-medium text-slate-200">
+                        Parol
+                    </label>
+                </div>
+                <input
+                    type="password"
+                    name="{{ form.password.html_name }}"
+                    id="{{ form.password.id_for_label }}"
+                    class="block w-full rounded-xl border border-slate-700 bg-slate-900/80 px-3 py-2 text-sm text-slate-100 shadow-sm focus:border-emerald-500 focus:ring-2 focus:ring-emerald-500/60 outline-none placeholder-slate-500"
+                    placeholder="********"
+                    autocomplete="current-password"
+                >
+                {% if form.password.errors %}
+                    <p class="mt-1 text-xs text-red-400">
+                        {{ form.password.errors.0 }}
+                    </p>
+                {% endif %}
+            </div>
+
+            <button
+                type="submit"
+                class="w-full inline-flex justify-center items-center rounded-xl bg-emerald-500 hover:bg-emerald-400 px-3 py-2.5 text-sm font-semibold text-slate-950 shadow-lg shadow-emerald-500/40 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-slate-900"
+            >
+                Tizimga kirish
+            </button>
+        </form>
+
+        <p class="mt-4 text-xs text-slate-500 text-center">
+            Ro'yxatdan o'tish faqat administrator tomonidan amalga oshiriladi.
+        </p>
+    </div>
+</div>
+</body>
+</html>
+
+

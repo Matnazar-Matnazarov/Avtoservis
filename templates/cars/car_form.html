@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block title %}{% if car %}Mashina tahrirlash{% else %}Yangi mashina{% endif %}{% endblock %}
+
+{% block content %}
+<div class="max-w-xl mx-auto">
+    <h1 class="text-xl font-semibold text-white mb-4">
+        {% if car %}Mashina tahrirlash{% else %}Yangi mashina qo'shish{% endif %}
+    </h1>
+    <form method="post" class="space-y-4">
+        {% csrf_token %}
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.customer.id_for_label }}">Mijoz</label>
+            {{ form.customer }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.brand.id_for_label }}">Brand</label>
+            {{ form.brand }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.model.id_for_label }}">Model</label>
+            {{ form.model }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.plate_number.id_for_label }}">Raqam</label>
+            {{ form.plate_number }}
+        </div>
+        <div>
+            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.vin.id_for_label }}">VIN</label>
+            {{ form.vin }}
+        </div>
+        <button type="submit"
+                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+            Saqlash
+        </button>
+    </form>
+</div>
+{% endblock %}
