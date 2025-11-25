@@ -9,7 +9,14 @@
     </h1>
 </div>
 
-<form method="post" enctype="multipart/form-data" class="space-y-6">
+{% if order and order.payment_status == "paid" %}
+    <div class="mb-4 rounded-lg border border-red-600 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+        <p class="font-semibold">⚠️ Diqqat!</p>
+        <p>Bu buyurtma to'langan. Tahrirlab bo'lmaydi.</p>
+    </div>
+{% endif %}
+
+<form method="post" enctype="multipart/form-data" class="space-y-6" {% if order and order.payment_status == "paid" %}onsubmit="event.preventDefault(); alert('To\'langan buyurtma tahrirlab bo\'lmaydi!'); return false;"{% endif %}>
     {% csrf_token %}
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -51,71 +58,101 @@
         {{ form.description }}
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
-        <h2 class="text-sm font-semibold text-slate-200">Xizmatlar</h2>
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-200">Xizmatlar</h2>
+        </div>
         {{ service_formset.management_form }}
-        {% for f in service_formset %}
-            <div class="grid grid-cols-1 md:grid-cols-5 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
-                 data-formset-prefix="services">
-                {{ f.id }}
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Xizmat</label>
-                    {{ f.service }}
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Status</label>
-                    {{ f.status }}
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Son</label>
-                    {{ f.quantity }}
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Narx</label>
-                    {{ f.price }}
-                </div>
-                {% if f.DELETE %}
-                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
-                        {{ f.DELETE }} <span>O'chirish</span>
+        <div id="services-container" class="space-y-3">
+            {% for f in service_formset %}
+                <div class="service-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end border border-slate-800 rounded-xl p-3 sm:p-4 bg-slate-900/40 hover:bg-slate-900/60 transition"
+                     data-formset-prefix="services">
+                    {{ f.id }}
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Xizmat</label>
+                        {{ f.service }}
                     </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Status</label>
+                        {{ f.status }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                            Narx
+                            <span class="text-[10px] text-slate-500 ml-1">(avtomatik)</span>
+                        </label>
+                        {{ f.price }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Chegirma (%)</label>
+                        {{ f.discount }}
+                    </div>
+                    <div class="sm:col-span-full lg:col-span-1 flex flex-col">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Jami</label>
+                        <div class="service-total text-sm font-semibold text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                            0 so'm
+                        </div>
+                    </div>
+                    {% if f.DELETE %}
+                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                            {{ f.DELETE }} <span>O'chirish</span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
         <button type="button" id="add-service-row"
-                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
-            + Xizmat qo'shish
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-200 transition">
+            <span class="text-base">+</span> Xizmat qo'shish
         </button>
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
-        <h2 class="text-sm font-semibold text-slate-200">Ehtiyot qismlar</h2>
+    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 sm:p-6 space-y-4">
+        <div class="flex items-center justify-between">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-200">Ehtiyot qismlar</h2>
+        </div>
         {{ part_formset.management_form }}
-        {% for f in part_formset %}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
-                 data-formset-prefix="parts">
-                {{ f.id }}
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Detal</label>
-                    {{ f.part }}
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Son</label>
-                    {{ f.quantity }}
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Narx</label>
-                    {{ f.price }}
-                </div>
-                {% if f.DELETE %}
-                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
-                        {{ f.DELETE }} <span>O'chirish</span>
+        <div id="parts-container" class="space-y-3">
+            {% for f in part_formset %}
+                <div class="part-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end border border-slate-800 rounded-xl p-3 sm:p-4 bg-slate-900/40 hover:bg-slate-900/60 transition"
+                     data-formset-prefix="parts">
+                    {{ f.id }}
+                    <div class="sm:col-span-2">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Detal</label>
+                        {{ f.part }}
                     </div>
-                {% endif %}
-            </div>
-        {% endfor %}
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Son</label>
+                        {{ f.quantity }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                            Narx
+                            <span class="text-[10px] text-slate-500 ml-1">(avtomatik)</span>
+                        </label>
+                        {{ f.price }}
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Chegirma (%)</label>
+                        {{ f.discount }}
+                    </div>
+                    <div class="sm:col-span-full lg:col-span-1 flex flex-col">
+                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Jami</label>
+                        <div class="part-total text-sm font-semibold text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                            0 so'm
+                        </div>
+                    </div>
+                    {% if f.DELETE %}
+                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                            {{ f.DELETE }} <span>O'chirish</span>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        </div>
         <button type="button" id="add-part-row"
-                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
-            + Detal qo'shish
+                class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-200 transition">
+            <span class="text-base">+</span> Detal qo'shish
         </button>
     </div>
 
@@ -198,13 +235,125 @@
 {% block extra_js %}
 {{ block.super }}
 <script>
-    function setupFormsetAddButton(prefix, addButtonId) {
+    // Format number with spaces for thousands
+    function formatNumber(num) {
+        return Math.round(num).toLocaleString('uz-UZ');
+    }
+
+    // Calculate service line total (quantity yo'q, faqat price va discount)
+    function calculateServiceTotal(row) {
+        const priceInput = row.querySelector('input[name*="-price"]');
+        const discountInput = row.querySelector('input[name*="-discount"]');
+        const totalDiv = row.querySelector('.service-total');
+
+        if (!priceInput || !totalDiv) return;
+
+        const price = parseFloat(priceInput.value) || 0;
+        const discount = parseFloat(discountInput?.value) || 0;
+
+        let total = price;
+        if (discount > 0) {
+            total = total * (1 - discount / 100);
+        }
+
+        totalDiv.textContent = formatNumber(total) + ' so\'m';
+    }
+
+    // Calculate part line total (quantity, price va discount bilan)
+    function calculatePartTotal(row) {
+        const quantityInput = row.querySelector('input[name*="-quantity"]');
+        const priceInput = row.querySelector('input[name*="-price"]');
+        const discountInput = row.querySelector('input[name*="-discount"]');
+        const totalDiv = row.querySelector('.part-total');
+
+        if (!quantityInput || !priceInput || !totalDiv) return;
+
+        const quantity = parseFloat(quantityInput.value) || 0;
+        const price = parseFloat(priceInput.value) || 0;
+        const discount = parseFloat(discountInput?.value) || 0;
+
+        let total = price * quantity;
+        if (discount > 0) {
+            total = total * (1 - discount / 100);
+        }
+
+        totalDiv.textContent = formatNumber(total) + ' so\'m';
+    }
+
+    // API base URLs
+    const API_SERVICE_PRICE_URL = '{% url "apps:api_service_price" 0 %}';
+    const API_PART_PRICE_URL = '{% url "apps:api_part_price" 0 %}';
+
+    // Fetch service price from API
+    async function fetchServicePrice(serviceId, priceInput) {
+        if (!serviceId) return;
+        try {
+            const url = API_SERVICE_PRICE_URL.replace('0', serviceId);
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error('Failed to fetch service price:', response.status);
+                return;
+            }
+            const data = await response.json();
+            if (data.price) {
+                priceInput.value = data.price;
+                const row = priceInput.closest('.service-row');
+                if (row) calculateServiceTotal(row);
+            }
+        } catch (error) {
+            console.error('Error fetching service price:', error);
+        }
+    }
+
+    // Fetch part price from API
+    async function fetchPartPrice(partId, priceInput) {
+        if (!partId) return;
+        try {
+            const url = API_PART_PRICE_URL.replace('0', partId);
+            const response = await fetch(url);
+            if (!response.ok) {
+                console.error('Failed to fetch part price:', response.status);
+                return;
+            }
+            const data = await response.json();
+            if (data.price) {
+                priceInput.value = data.price;
+                const row = priceInput.closest('.part-row');
+                if (row) calculatePartTotal(row);
+            }
+        } catch (error) {
+            console.error('Error fetching part price:', error);
+        }
+    }
+
+    // Setup formset add button with enhanced functionality
+    function setupFormsetAddButton(prefix, addButtonId, isService = false) {
         const addBtn = document.getElementById(addButtonId);
         if (!addBtn) return;
+        
         addBtn.addEventListener('click', function () {
-            const totalFormsInput = document.querySelector(`input[name=\"${prefix}-TOTAL_FORMS\"]`);
+            const totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
+            if (!totalFormsInput) {
+                console.error('Total forms input not found');
+                return;
+            }
+            
             const total = parseInt(totalFormsInput.value, 10);
-            const formRows = document.querySelectorAll(`div[data-formset-prefix=\"${prefix}\"]`);
+            const containerId = isService ? 'services-container' : 'parts-container';
+            const container = document.getElementById(containerId);
+            
+            if (!container) {
+                console.error('Container not found:', containerId);
+                return;
+            }
+            
+            const formRows = container.querySelectorAll(`div[data-formset-prefix="${prefix}"]`);
+            
+            if (formRows.length === 0) {
+                console.error('No form rows found');
+                return;
+            }
+            
             const lastRow = formRows[formRows.length - 1];
             const newRow = lastRow.cloneNode(true);
 
@@ -219,17 +368,118 @@
                     el.checked = false;
                 } else {
                     el.value = '';
+                    // Preserve readonly attribute for price fields
+                    if (el.name && el.name.includes('-price')) {
+                        el.setAttribute('readonly', 'readonly');
+                    }
                 }
             });
 
-            lastRow.parentNode.insertBefore(newRow, addBtn);
+            // Reset total display
+            const totalDiv = newRow.querySelector(isService ? '.service-total' : '.part-total');
+            if (totalDiv) totalDiv.textContent = '0 so\'m';
+
+            // Reset discount to 0 for services and parts
+            const discountInput = newRow.querySelector('input[name*="-discount"]');
+            if (discountInput) discountInput.value = '0';
+
+            // Append new row to container
+            container.appendChild(newRow);
             totalFormsInput.value = total + 1;
+
+            // Setup event listeners for new row
+            if (isService) {
+                setupServiceRowEvents(newRow);
+            } else {
+                setupPartRowEvents(newRow);
+            }
         });
     }
 
-    setupFormsetAddButton('services', 'add-service-row');
-    setupFormsetAddButton('parts', 'add-part-row');
-    setupFormsetAddButton('photos', 'add-photo-row');
-    setupFormsetAddButton('payments', 'add-payment-row');
+    // Setup service row event listeners
+    function setupServiceRowEvents(row) {
+        const serviceSelect = row.querySelector('select[name*="-service"]');
+        const priceInput = row.querySelector('input[name*="-price"]');
+        const discountInput = row.querySelector('input[name*="-discount"]');
+
+        if (serviceSelect) {
+            serviceSelect.addEventListener('change', function() {
+                const serviceId = this.value;
+                if (serviceId && priceInput) {
+                    fetchServicePrice(serviceId, priceInput);
+                } else if (priceInput) {
+                    priceInput.value = '';
+                    calculateServiceTotal(row);
+                }
+            });
+        }
+
+        [priceInput, discountInput].forEach(input => {
+            if (input) {
+                input.addEventListener('input', () => calculateServiceTotal(row));
+                input.addEventListener('change', () => calculateServiceTotal(row));
+                // Set default discount to 0 if empty
+                if (input === discountInput && !input.value) {
+                    input.value = '0';
+                }
+            }
+        });
+
+        // Calculate initial total
+        calculateServiceTotal(row);
+    }
+
+    // Setup part row event listeners
+    function setupPartRowEvents(row) {
+        const partSelect = row.querySelector('select[name*="-part"]');
+        const quantityInput = row.querySelector('input[name*="-quantity"]');
+        const priceInput = row.querySelector('input[name*="-price"]');
+        const discountInput = row.querySelector('input[name*="-discount"]');
+
+        if (partSelect) {
+            partSelect.addEventListener('change', function() {
+                const partId = this.value;
+                if (partId && priceInput) {
+                    fetchPartPrice(partId, priceInput);
+                } else if (priceInput) {
+                    priceInput.value = '';
+                    calculatePartTotal(row);
+                }
+            });
+        }
+
+        [quantityInput, priceInput, discountInput].forEach(input => {
+            if (input) {
+                input.addEventListener('input', () => calculatePartTotal(row));
+                input.addEventListener('change', () => calculatePartTotal(row));
+                // Set default discount to 0 if empty
+                if (input === discountInput && !input.value) {
+                    input.value = '0';
+                }
+            }
+        });
+
+        // Calculate initial total
+        calculatePartTotal(row);
+    }
+
+    // Initialize all existing rows
+    document.addEventListener('DOMContentLoaded', function() {
+        // Setup service rows
+        document.querySelectorAll('.service-row').forEach(row => {
+            setupServiceRowEvents(row);
+        });
+
+        // Setup part rows
+        document.querySelectorAll('.part-row').forEach(row => {
+            setupPartRowEvents(row);
+        });
+
+        // Setup add buttons
+        setupFormsetAddButton('services', 'add-service-row', true);
+        setupFormsetAddButton('parts', 'add-part-row', false);
+        setupFormsetAddButton('photos', 'add-photo-row', false);
+        setupFormsetAddButton('payments', 'add-payment-row', false);
+    });
 </script>
 {% endblock %}

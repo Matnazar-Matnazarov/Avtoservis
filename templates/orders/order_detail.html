@@ -12,10 +12,16 @@
             Yaratilgan: {{ order.created_at|date:"Y-m-d H:i" }}
         </p>
         <div class="flex flex-wrap gap-2 mt-3 text-xs">
-            <a href="{% url 'apps:order_update' order.pk %}"
-               class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
-                Tahrirlash
-            </a>
+            {% if order.payment_status != "paid" %}
+                <a href="{% url 'apps:order_update' order.pk %}"
+                   class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+                    Tahrirlash
+                </a>
+            {% else %}
+                <span class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-500 cursor-not-allowed">
+                    Tahrirlash (to'langan)
+                </span>
+            {% endif %}
             <a href="{% url 'apps:order_receipt' order.pk %}"
                class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
                 Chek
@@ -99,8 +105,8 @@
                         <th class="px-3 py-2 text-left font-medium">#</th>
                         <th class="px-3 py-2 text-left font-medium">Xizmat</th>
                         <th class="px-3 py-2 text-left font-medium">Status</th>
-                        <th class="px-3 py-2 text-left font-medium">Son</th>
                         <th class="px-3 py-2 text-right font-medium">Narx</th>
+                        <th class="px-3 py-2 text-right font-medium">Chegirma</th>
                         <th class="px-3 py-2 text-right font-medium">Jami</th>
                     </tr>
                     </thead>
@@ -124,9 +130,15 @@
                                     </span>
                                 {% endif %}
                             </td>
-                            <td class="px-3 py-2 text-slate-100">{{ item.quantity }}</td>
                             <td class="px-3 py-2 text-right text-slate-100">
                                 {{ item.price|floatformat:0 }} so'm
+                            </td>
+                            <td class="px-3 py-2 text-right text-slate-300">
+                                {% if item.discount %}
+                                    <span class="text-amber-400 font-medium">-{{ item.discount|floatformat:2 }}%</span>
+                                {% else %}
+                                    <span class="text-slate-500">—</span>
+                                {% endif %}
                             </td>
                             <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
                                 {{ item.line_total|floatformat:0 }} so'm
@@ -157,6 +169,7 @@
                         <th class="px-3 py-2 text-left font-medium">Artikul</th>
                         <th class="px-3 py-2 text-left font-medium">Son</th>
                         <th class="px-3 py-2 text-right font-medium">Narx</th>
+                        <th class="px-3 py-2 text-right font-medium">Chegirma</th>
                         <th class="px-3 py-2 text-right font-medium">Jami</th>
                     </tr>
                     </thead>
@@ -170,13 +183,20 @@
                             <td class="px-3 py-2 text-right text-slate-100">
                                 {{ item.price|floatformat:0 }} so'm
                             </td>
+                            <td class="px-3 py-2 text-right text-slate-300">
+                                {% if item.discount %}
+                                    <span class="text-amber-400 font-medium">-{{ item.discount|floatformat:2 }}%</span>
+                                {% else %}
+                                    <span class="text-slate-500">—</span>
+                                {% endif %}
+                            </td>
                             <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
                                 {{ item.line_total|floatformat:0 }} so'm
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="px-3 py-4 text-center text-slate-500">
+                            <td colspan="7" class="px-3 py-4 text-center text-slate-500">
                                 Ehtiyot qismlar qo'shilmagan
                             </td>
                         </tr>

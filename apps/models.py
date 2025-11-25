@@ -1,4 +1,5 @@
 from typing import Any
+from decimal import Decimal
 from django.db import models
 from django.db.models import Sum
 from django.contrib.auth.models import AbstractUser
@@ -240,13 +241,19 @@ class Order(models.Model):
 
     def update_payment_state(self, save: bool = True):
         paid = self.paid_total
+        # To'lov miqdorini umumiy summa bilan solishtirish
         if paid <= 0:
             self.payment_status = PaymentStatus.UNPAID
+        elif abs(paid - self.total_amount) < 0.01:  # Kichik farqni e'tiborsiz qoldirish
+            self.payment_status = PaymentStatus.PAID
+            # To'liq to'langanida avtomatik yakunlangan deb belgilash
+            if self.status != OrderStatus.COMPLETED:
+                self.status = OrderStatus.COMPLETED
         elif paid < self.total_amount:
             self.payment_status = PaymentStatus.PARTIAL
         else:
+            # To'langan summa katta bo'lsa ham PAID deb belgilash
             self.payment_status = PaymentStatus.PAID
-            # To'liq to'langanida avtomatik yakunlangan deb belgilash mumkin
             if self.status != OrderStatus.COMPLETED:
                 self.status = OrderStatus.COMPLETED
         if save:
@@ -262,6 +269,9 @@ class OrderService(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     price = models.DecimalField(
         _("Price"), max_digits=12, decimal_places=2
+    )
+    discount = models.DecimalField(
+        _("Discount"), max_digits=5, decimal_places=2, null=True, blank=True, default=Decimal('0')
     )
     status = models.CharField(
         _("Status"),
@@ -279,7 +289,11 @@ class OrderService(models.Model):
 
     @property
     def line_total(self):
-        return self.price * self.quantity
+        # Xizmatlar uchun quantity yo'q, faqat price va discount
+        total = self.price
+        if self.discount:
+            total = total * (1 - self.discount / 100)
+        return total
 
 
 class OrderPart(models.Model):
@@ -291,6 +305,9 @@ class OrderPart(models.Model):
     price = models.DecimalField(
         _("Price"), max_digits=12, decimal_places=2
     )
+    discount = models.DecimalField(
+        _("Discount"), max_digits=5, decimal_places=2, null=True, blank=True, default=Decimal('0')
+    )
 
     class Meta:
         verbose_name = _("Order part")
@@ -301,7 +318,10 @@ class OrderPart(models.Model):
 
     @property
     def line_total(self):
-        return self.price * self.quantity
+        total = self.price * self.quantity
+        if self.discount:
+            total = total * (1 - self.discount / 100)
+        return total
 
     def save(self, *args, **kwargs):
         # Skladni oddiy tarzda boshqarish:

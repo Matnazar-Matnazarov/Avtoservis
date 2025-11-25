@@ -33,8 +33,8 @@
             <thead>
             <tr class="border-b border-slate-200">
                 <th class="text-left py-1">Xizmat</th>
-                <th class="text-right py-1">Son</th>
                 <th class="text-right py-1">Narx</th>
+                <th class="text-right py-1">Chegirma</th>
                 <th class="text-right py-1">Jami</th>
             </tr>
             </thead>
@@ -42,8 +42,14 @@
             {% for item in services %}
                 <tr class="border-b border-slate-100">
                     <td class="py-1">{{ item.service.name }}</td>
-                    <td class="py-1 text-right">{{ item.quantity }}</td>
                     <td class="py-1 text-right">{{ item.price|floatformat:0 }}</td>
+                    <td class="py-1 text-right">
+                        {% if item.discount %}
+                            <span class="text-amber-600">-{{ item.discount|floatformat:2 }}%</span>
+                        {% else %}
+                            <span class="text-slate-400">—</span>
+                        {% endif %}
+                    </td>
                     <td class="py-1 text-right">{{ item.line_total|floatformat:0 }}</td>
                 </tr>
             {% empty %}
@@ -63,6 +69,7 @@
                 <th class="text-left py-1">Nomi</th>
                 <th class="text-right py-1">Son</th>
                 <th class="text-right py-1">Narx</th>
+                <th class="text-right py-1">Chegirma</th>
                 <th class="text-right py-1">Jami</th>
             </tr>
             </thead>
@@ -72,11 +79,18 @@
                     <td class="py-1">{{ item.part.name }}</td>
                     <td class="py-1 text-right">{{ item.quantity }}</td>
                     <td class="py-1 text-right">{{ item.price|floatformat:0 }}</td>
+                    <td class="py-1 text-right">
+                        {% if item.discount %}
+                            <span class="text-amber-600">-{{ item.discount|floatformat:2 }}%</span>
+                        {% else %}
+                            <span class="text-slate-400">—</span>
+                        {% endif %}
+                    </td>
                     <td class="py-1 text-right">{{ item.line_total|floatformat:0 }}</td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4" class="py-2 text-center text-slate-400">Ehtiyot qismlar qo'shilmagan</td>
+                    <td colspan="5" class="py-2 text-center text-slate-400">Ehtiyot qismlar qo'shilmagan</td>
                 </tr>
             {% endfor %}
             </tbody>

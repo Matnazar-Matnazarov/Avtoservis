@@ -4,7 +4,7 @@ import csv
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db.models import Q, Sum
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from ..forms import (
@@ -14,7 +14,7 @@ from ..forms import (
     OrderPhotoFormSet,
     OrderPaymentFormSet,
 )
-from ..models import Order
+from ..models import Order, Service, Part, PaymentStatus
 
 
 @login_required
@@ -128,26 +128,115 @@ def order_create(request):
         payment_formset = OrderPaymentFormSet(
             request.POST, prefix="payments"
         )
+        
+        # Bo'sh formlarni o'tkazib yuborish - faqat to'ldirilgan formlarni validate qilish
+        # Service formset uchun bo'sh formlarni o'tkazib yuborish
+        for service_form in service_formset.forms:
+            if service_form in service_formset.deleted_forms:
+                continue
+            service_value = service_form.data.get(service_form.add_prefix('service'), '')
+            if not service_value or service_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in service_form.fields:
+                    service_form.fields[field_name].required = False
+        
+        # Part formset uchun bo'sh formlarni o'tkazib yuborish
+        for part_form in part_formset.forms:
+            if part_form in part_formset.deleted_forms:
+                continue
+            part_value = part_form.data.get(part_form.add_prefix('part'), '')
+            if not part_value or part_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in part_form.fields:
+                    part_form.fields[field_name].required = False
+        
+        # Validation tekshiruvi
+        form_valid = form.is_valid()
+        service_formset_valid = service_formset.is_valid()
+        part_formset_valid = part_formset.is_valid()
+        photo_formset_valid = photo_formset.is_valid()
+        payment_formset_valid = payment_formset.is_valid()
+        
         if (
-            form.is_valid()
-            and service_formset.is_valid()
-            and part_formset.is_valid()
-            and photo_formset.is_valid()
-            and payment_formset.is_valid()
+            form_valid
+            and service_formset_valid
+            and part_formset_valid
+            and photo_formset_valid
+            and payment_formset_valid
         ):
             order = form.save()
             service_formset.instance = order
             part_formset.instance = order
             photo_formset.instance = order
             payment_formset.instance = order
-            service_formset.save()
-            part_formset.save()
+            
+            # Faqat to'ldirilgan formlarni saqlash
+            service_formset.save(commit=False)
+            for service_form in service_formset.forms:
+                if service_form in service_formset.deleted_forms:
+                    if service_form.instance.pk:
+                        service_form.instance.delete()
+                elif service_form.cleaned_data.get('service'):
+                    service_form.save()
+            
+            part_formset.save(commit=False)
+            for part_form in part_formset.forms:
+                if part_form in part_formset.deleted_forms:
+                    if part_form.instance.pk:
+                        part_form.instance.delete()
+                elif part_form.cleaned_data.get('part'):
+                    part_form.save()
+            
             photo_formset.save()
             payment_formset.save()
             order.recalculate_total(save=True)
             order.update_payment_state(save=True)
             messages.success(request, f"Buyurtma #{order.id} yaratildi.")
             return redirect("apps:order_detail", pk=order.pk)
+        else:
+            # Validation xatolarini ko'rsatish
+            if not form_valid:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{form.fields[field].label if field in form.fields else field}: {error}")
+            
+            if not service_formset_valid:
+                for idx, service_form in enumerate(service_formset.forms):
+                    if service_form.errors:
+                        for field, errors in service_form.errors.items():
+                            for error in errors:
+                                field_label = service_form.fields[field].label if field in service_form.fields else field
+                                messages.error(request, f"Xizmat #{idx + 1} - {field_label}: {error}")
+                    if service_form.non_field_errors():
+                        for error in service_form.non_field_errors():
+                            messages.error(request, f"Xizmat #{idx + 1}: {error}")
+            
+            if not part_formset_valid:
+                for idx, part_form in enumerate(part_formset.forms):
+                    if part_form.errors:
+                        for field, errors in part_form.errors.items():
+                            for error in errors:
+                                field_label = part_form.fields[field].label if field in part_form.fields else field
+                                messages.error(request, f"Ehtiyot qism #{idx + 1} - {field_label}: {error}")
+                    if part_form.non_field_errors():
+                        for error in part_form.non_field_errors():
+                            messages.error(request, f"Ehtiyot qism #{idx + 1}: {error}")
+            
+            if not photo_formset_valid:
+                for idx, photo_form in enumerate(photo_formset.forms):
+                    if photo_form.errors:
+                        for field, errors in photo_form.errors.items():
+                            for error in errors:
+                                field_label = photo_form.fields[field].label if field in photo_form.fields else field
+                                messages.error(request, f"Foto #{idx + 1} - {field_label}: {error}")
+            
+            if not payment_formset_valid:
+                for idx, payment_form in enumerate(payment_formset.forms):
+                    if payment_form.errors:
+                        for field, errors in payment_form.errors.items():
+                            for error in errors:
+                                field_label = payment_form.fields[field].label if field in payment_form.fields else field
+                                messages.error(request, f"To'lov #{idx + 1} - {field_label}: {error}")
     else:
         initial = {}
         customer_id = request.GET.get("customer")
@@ -175,6 +264,12 @@ def order_create(request):
 @login_required
 def order_update(request, pk: int):
     order = get_object_or_404(Order, pk=pk)
+    
+    # To'langan buyurtmalarni edit qilib bo'lmaydi
+    if order.payment_status == PaymentStatus.PAID:
+        messages.error(request, f"To'langan buyurtma #{order.id} ni tahrirlab bo'lmaydi.")
+        return redirect("apps:order_detail", pk=order.pk)
+    
     if request.method == "POST":
         form = OrderForm(request.POST, instance=order)
         service_formset = OrderServiceFormSet(
@@ -189,12 +284,41 @@ def order_update(request, pk: int):
         payment_formset = OrderPaymentFormSet(
             request.POST, instance=order, prefix="payments"
         )
+        
+        # Bo'sh formlarni o'tkazib yuborish - faqat to'ldirilgan formlarni validate qilish
+        # Service formset uchun bo'sh formlarni o'tkazib yuborish
+        for service_form in service_formset.forms:
+            if service_form in service_formset.deleted_forms:
+                continue
+            service_value = service_form.data.get(service_form.add_prefix('service'), '')
+            if not service_value or service_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in service_form.fields:
+                    service_form.fields[field_name].required = False
+        
+        # Part formset uchun bo'sh formlarni o'tkazib yuborish
+        for part_form in part_formset.forms:
+            if part_form in part_formset.deleted_forms:
+                continue
+            part_value = part_form.data.get(part_form.add_prefix('part'), '')
+            if not part_value or part_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in part_form.fields:
+                    part_form.fields[field_name].required = False
+        
+        # Validation tekshiruvi
+        form_valid = form.is_valid()
+        service_formset_valid = service_formset.is_valid()
+        part_formset_valid = part_formset.is_valid()
+        photo_formset_valid = photo_formset.is_valid()
+        payment_formset_valid = payment_formset.is_valid()
+        
         if (
-            form.is_valid()
-            and service_formset.is_valid()
-            and part_formset.is_valid()
-            and photo_formset.is_valid()
-            and payment_formset.is_valid()
+            form_valid
+            and service_formset_valid
+            and part_formset_valid
+            and photo_formset_valid
+            and payment_formset_valid
         ):
             form.save()
             service_formset.save()
@@ -205,6 +329,50 @@ def order_update(request, pk: int):
             order.update_payment_state(save=True)
             messages.success(request, f"Buyurtma #{order.id} yangilandi.")
             return redirect("apps:order_detail", pk=order.pk)
+        else:
+            # Validation xatolarini ko'rsatish
+            if not form_valid:
+                for field, errors in form.errors.items():
+                    for error in errors:
+                        messages.error(request, f"{form.fields[field].label if field in form.fields else field}: {error}")
+            
+            if not service_formset_valid:
+                for idx, service_form in enumerate(service_formset.forms):
+                    if service_form.errors:
+                        for field, errors in service_form.errors.items():
+                            for error in errors:
+                                field_label = service_form.fields[field].label if field in service_form.fields else field
+                                messages.error(request, f"Xizmat #{idx + 1} - {field_label}: {error}")
+                    if service_form.non_field_errors():
+                        for error in service_form.non_field_errors():
+                            messages.error(request, f"Xizmat #{idx + 1}: {error}")
+            
+            if not part_formset_valid:
+                for idx, part_form in enumerate(part_formset.forms):
+                    if part_form.errors:
+                        for field, errors in part_form.errors.items():
+                            for error in errors:
+                                field_label = part_form.fields[field].label if field in part_form.fields else field
+                                messages.error(request, f"Ehtiyot qism #{idx + 1} - {field_label}: {error}")
+                    if part_form.non_field_errors():
+                        for error in part_form.non_field_errors():
+                            messages.error(request, f"Ehtiyot qism #{idx + 1}: {error}")
+            
+            if not photo_formset_valid:
+                for idx, photo_form in enumerate(photo_formset.forms):
+                    if photo_form.errors:
+                        for field, errors in photo_form.errors.items():
+                            for error in errors:
+                                field_label = photo_form.fields[field].label if field in photo_form.fields else field
+                                messages.error(request, f"Foto #{idx + 1} - {field_label}: {error}")
+            
+            if not payment_formset_valid:
+                for idx, payment_form in enumerate(payment_formset.forms):
+                    if payment_form.errors:
+                        for field, errors in payment_form.errors.items():
+                            for error in errors:
+                                field_label = payment_form.fields[field].label if field in payment_form.fields else field
+                                messages.error(request, f"To'lov #{idx + 1} - {field_label}: {error}")
     else:
         form = OrderForm(instance=order)
         service_formset = OrderServiceFormSet(instance=order, prefix="services")
@@ -319,4 +487,23 @@ def monthly_report_csv(request):
     writer.writerow(["Jami", "", "", "", "", "", float(total)])
     return response
 
+
+@login_required
+def api_service_price(request, service_id: int):
+    """API endpoint to get service price by ID"""
+    try:
+        service = get_object_or_404(Service, pk=service_id)
+        return JsonResponse({"price": str(service.base_price)})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
+
+
+@login_required
+def api_part_price(request, part_id: int):
+    """API endpoint to get part price by ID"""
+    try:
+        part = get_object_or_404(Part, pk=part_id)
+        return JsonResponse({"price": str(part.price)})
+    except Exception as e:
+        return JsonResponse({"error": str(e)}, status=400)
 

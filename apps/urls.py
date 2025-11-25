@@ -8,6 +8,8 @@ from .views.orders import (
     order_receipt,
     daily_report_csv,
     monthly_report_csv,
+    api_service_price,
+    api_part_price,
 )
 from .views.customers import (
     customer_list,
@@ -54,4 +56,6 @@ urlpatterns = [
     path("parts/<int:pk>/edit/", part_update, name="part_update"),
     path("reports/daily.csv", daily_report_csv, name="daily_report_csv"),
     path("reports/monthly.csv", monthly_report_csv, name="monthly_report_csv"),
+    path("api/service/<int:service_id>/price/", api_service_price, name="api_service_price"),
+    path("api/part/<int:part_id>/price/", api_part_price, name="api_part_price"),
 ]

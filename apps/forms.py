@@ -71,13 +71,41 @@ class OrderForm(TailwindModelForm):
 class OrderServiceForm(TailwindModelForm):
     class Meta:
         model = OrderService
-        fields = ["service", "status", "quantity", "price"]
+        fields = ["service", "status", "price", "discount"]
+        widgets = {
+            "price": forms.NumberInput(attrs={
+                "readonly": True,
+                "step": "0.01",
+                "class": "w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-slate-400 cursor-not-allowed"
+            }),
+            "discount": forms.NumberInput(attrs={
+                "step": "0.01",
+                "min": "0",
+                "max": "100",
+                "placeholder": "0.00",
+                "value": "0"
+            }),
+        }
 
 
 class OrderPartForm(TailwindModelForm):
     class Meta:
         model = OrderPart
-        fields = ["part", "quantity", "price"]
+        fields = ["part", "quantity", "price", "discount"]
+        widgets = {
+            "price": forms.NumberInput(attrs={
+                "readonly": True,
+                "step": "0.01",
+                "class": "w-full rounded-lg border border-slate-700 bg-slate-800/60 px-3 py-2 text-sm text-slate-400 cursor-not-allowed"
+            }),
+            "discount": forms.NumberInput(attrs={
+                "step": "0.01",
+                "min": "0",
+                "max": "100",
+                "placeholder": "0.00",
+                "value": "0"
+            }),
+        }
 
 
 class OrderPhotoForm(TailwindModelForm):
@@ -110,20 +138,56 @@ class PartForm(TailwindModelForm):
         fields = ["name", "article", "price", "stock_quantity"]
 
 
+class BaseOrderServiceFormSet(forms.BaseInlineFormSet):
+    def clean(self):
+        """Bo'sh formlarni o'tkazib yuborish"""
+        if any(self.errors):
+            return
+        # Bo'sh formlarni o'tkazib yuborish
+        for form in self.forms:
+            if form in self.deleted_forms:
+                continue
+            # cleaned_data hali mavjud emas, shuning uchun data dan tekshiramiz
+            service_value = form.data.get(form.add_prefix('service'), '')
+            if not service_value or service_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in form.fields:
+                    form.fields[field_name].required = False
+
+class BaseOrderPartFormSet(forms.BaseInlineFormSet):
+    def clean(self):
+        """Bo'sh formlarni o'tkazib yuborish"""
+        if any(self.errors):
+            return
+        # Bo'sh formlarni o'tkazib yuborish
+        for form in self.forms:
+            if form in self.deleted_forms:
+                continue
+            # cleaned_data hali mavjud emas, shuning uchun data dan tekshiramiz
+            part_value = form.data.get(form.add_prefix('part'), '')
+            if not part_value or part_value == '':
+                # Bo'sh form - required fieldlarni o'chirish
+                for field_name in form.fields:
+                    form.fields[field_name].required = False
+
 OrderServiceFormSet = inlineformset_factory(
     Order,
     OrderService,
     form=OrderServiceForm,
+    formset=BaseOrderServiceFormSet,
     extra=1,
     can_delete=True,
+    validate_min=False,
 )
 
 OrderPartFormSet = inlineformset_factory(
     Order,
     OrderPart,
     form=OrderPartForm,
+    formset=BaseOrderPartFormSet,
     extra=1,
     can_delete=True,
+    validate_min=False,
 )
 
 OrderPhotoFormSet = inlineformset_factory(
