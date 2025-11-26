@@ -110,13 +110,14 @@ Brauzerda: http://127.0.0.1:8000  |  Admin: http://127.0.0.1:8000/admin
 
 ### 4. To'lov Tizimi (Payment System)
 - **To'lov Boshqaruvi**
-  - To'lov holatlari: To'landi / Qisman to'landi / To'lanmadi
-  - To'lov usullari: Naqd / Karta / Pul o'tkazish
-  - Chek chiqarish (PDF formatida)
+  - To'lov holati admin tomonidan qo'lda belgilanadi: To'landi / To'lanmadi
+  - To'langanida to'lov turi tanlanadi va saqlanadi: Naqd / Karta / Perevod
+  - Hozircha onlayn/avtomatik to'lov integratsiyasi yo'q
 
 ### 5. Telegram Integratsiyasi
 - **Bildirishnoma Xizmati**
-  - Buyurtma holati o'zgargan taqdirda mijozga avtomatik xabar
+  - Buyurtma holati o'zgarganda mijozga avtomatik xabar yuboriladi
+  - Faqat mijozning `telegram_username` mavjud bo'lsa va botga Start bosgan bo'lsa
   - Shaxsiy xabarlar orqali buyurtma holati haqida xabardor qilish
 
 ### 6. Kengaytirilchi Qidiruv va Filtrlash
