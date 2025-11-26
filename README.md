@@ -2,10 +2,10 @@
 
 <p align="left">
   <a href="https://www.python.org/">
-    <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white" alt="Python" />
+    <img src="https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white" alt="Python" />
   </a>
   <a href="https://www.djangoproject.com/">
-    <img src="https://img.shields.io/badge/Django-4.x-092E20?logo=django&logoColor=white" alt="Django" />
+    <img src="https://img.shields.io/badge/Django-5.x-092E20?logo=django&logoColor=white" alt="Django" />
   </a>
   <a href="https://jinja.palletsprojects.com/">
     <img src="https://img.shields.io/badge/Jinja-Templates-B41717" alt="Jinja" />
@@ -144,7 +144,7 @@ Brauzerda: http://127.0.0.1:8000  |  Admin: http://127.0.0.1:8000/admin
 ### 10. Foydalanuvchi Tizimi
 - **Kirish va Ruxsatnomalar**
   - Turli foydalanuvchi rollari (Admin, Usta, Qabulxona)
-  - Har bir rol uchun maxsus huquqlar va imtiyozlar
+  - Faqat Admin uchun maxsus huquqlar va imtiyozlar qolganlari esa kirolmaydi
   - Xavfsizlik va ma'lumotlarni himoya qilish
 
 ## Tezkor Amalga Oshirish Uchun Tavsiya Etilgan Bosqichlar

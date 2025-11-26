@@ -10,7 +10,7 @@ from ..models import Master
 @login_required
 def master_list(request):
     masters = Master.objects.all().order_by("full_name")
-    return render(request, "masters/master_list.html", {"masters": masters})
+    return render(request, "masters/master_list.jinja", {"masters": masters})
 
 
 @login_required
@@ -25,7 +25,7 @@ def master_create(request):
         form = MasterForm()
     return render(
         request,
-        "masters/master_form.html",
+        "masters/master_form.jinja",
         {"form": form, "master": None},
     )
 
@@ -43,7 +43,7 @@ def master_update(request, pk: int):
         form = MasterForm(instance=master)
     return render(
         request,
-        "masters/master_form.html",
+        "masters/master_form.jinja",
         {"form": form, "master": master},
     )
 
@@ -56,7 +56,7 @@ def master_workload(request):
     masters = Master.objects.annotate(total_orders=Count("orders")).all()
     return render(
         request,
-        "masters/master_workload.html",
+        "masters/master_workload.jinja",
         {"masters": masters},
     )
 

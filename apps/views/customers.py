@@ -19,7 +19,7 @@ def customer_list(request):
             | Q(telegram_username__icontains=q)
         )
     context = {"customers": qs, "q": q or ""}
-    return render(request, "customers/customer_list.html", context)
+    return render(request, "customers/customer_list.jinja", context)
 
 
 @login_required
@@ -34,7 +34,7 @@ def customer_create(request):
         form = CustomerForm()
     return render(
         request,
-        "customers/customer_form.html",
+        "customers/customer_form.jinja",
         {"form": form, "customer": None},
     )
 
@@ -52,7 +52,7 @@ def customer_update(request, pk: int):
         form = CustomerForm(instance=customer)
     return render(
         request,
-        "customers/customer_form.html",
+        "customers/customer_form.jinja",
         {"form": form, "customer": customer},
     )
 
@@ -63,7 +63,7 @@ def customer_detail(request, pk: int):
     orders = customer.orders.select_related("car").all()
     return render(
         request,
-        "customers/customer_detail.html",
+        "customers/customer_detail.jinja",
         {"customer": customer, "orders": orders},
     )
 

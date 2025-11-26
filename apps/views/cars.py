@@ -21,7 +21,7 @@ def car_list(request):
             | Q(customer__phone__icontains=q)
         )
     context = {"cars": qs, "q": q or ""}
-    return render(request, "cars/car_list.html", context)
+    return render(request, "cars/car_list.jinja", context)
 
 
 @login_required
@@ -40,7 +40,7 @@ def car_create(request):
         form = CarForm(initial=initial)
     return render(
         request,
-        "cars/car_form.html",
+        "cars/car_form.jinja",
         {"form": form, "car": None},
     )
 
@@ -58,7 +58,7 @@ def car_update(request, pk: int):
         form = CarForm(instance=car)
     return render(
         request,
-        "cars/car_form.html",
+        "cars/car_form.jinja",
         {"form": form, "car": car},
     )
 
@@ -69,7 +69,7 @@ def car_history(request, pk: int):
     orders = car.orders.select_related("customer", "master").all()
     return render(
         request,
-        "cars/car_history.html",
+        "cars/car_history.jinja",
         {"car": car, "orders": orders},
     )
 

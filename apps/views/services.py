@@ -9,7 +9,7 @@ from ..models import Service, Part
 @login_required
 def service_list(request):
     services = Service.objects.all().order_by("name")
-    return render(request, "services/service_list.html", {"services": services})
+    return render(request, "services/service_list.jinja", {"services": services})
 
 
 @login_required
@@ -24,7 +24,7 @@ def service_create(request):
         form = ServiceForm()
     return render(
         request,
-        "services/service_form.html",
+        "services/service_form.jinja",
         {"form": form, "service": None},
     )
 
@@ -42,7 +42,7 @@ def service_update(request, pk: int):
         form = ServiceForm(instance=service)
     return render(
         request,
-        "services/service_form.html",
+        "services/service_form.jinja",
         {"form": form, "service": service},
     )
 
@@ -50,7 +50,7 @@ def service_update(request, pk: int):
 @login_required
 def part_list(request):
     parts = Part.objects.all().order_by("name")
-    return render(request, "services/part_list.html", {"parts": parts})
+    return render(request, "services/part_list.jinja", {"parts": parts})
 
 
 @login_required
@@ -65,7 +65,7 @@ def part_create(request):
         form = PartForm()
     return render(
         request,
-        "services/part_form.html",
+        "services/part_form.jinja",
         {"form": form, "part": None},
     )
 
@@ -83,7 +83,7 @@ def part_update(request, pk: int):
         form = PartForm(instance=part)
     return render(
         request,
-        "services/part_form.html",
+        "services/part_form.jinja",
         {"form": form, "part": part},
     )
 

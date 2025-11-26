@@ -75,7 +75,7 @@ def order_list(request):
             "q": query or "",
         },
     }
-    return render(request, "orders/order_list.html", context)
+    return render(request, "orders/order_list.jinja", context)
 
 
 @login_required
@@ -113,7 +113,7 @@ def order_detail(request, pk: int):
         "photos_after": photos_after,
         "payments": order.payments.all(),
     }
-    return render(request, "orders/order_detail.html", context)
+    return render(request, "orders/order_detail.jinja", context)
 
 
 @login_required
@@ -258,7 +258,7 @@ def order_create(request):
         "photo_formset": photo_formset,
         "payment_formset": payment_formset,
     }
-    return render(request, "orders/order_form.html", context)
+    return render(request, "orders/order_form.jinja", context)
 
 
 @login_required
@@ -388,7 +388,7 @@ def order_update(request, pk: int):
         "photo_formset": photo_formset,
         "payment_formset": payment_formset,
     }
-    return render(request, "orders/order_form.html", context)
+    return render(request, "orders/order_form.jinja", context)
 
 
 @login_required
@@ -399,7 +399,7 @@ def order_receipt(request, pk: int):
     parts = order.part_items.all()
     return render(
         request,
-        "orders/order_receipt.html",
+        "orders/order_receipt.jinja",
         {"order": order, "services": services, "parts": parts},
     )
 
@@ -506,4 +506,3 @@ def api_part_price(request, part_id: int):
         return JsonResponse({"price": str(part.price)})
     except Exception as e:
         return JsonResponse({"error": str(e)}, status=400)
-
