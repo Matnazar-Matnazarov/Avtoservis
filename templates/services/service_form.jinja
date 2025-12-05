@@ -4,26 +4,26 @@
 
 {% block content %}
 <div class="max-w-md mx-auto">
-    <h1 class="text-xl font-semibold text-white mb-4">
+    <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white mb-4">
         {% if service %}Xizmat tahrirlash{% else %}Yangi xizmat qo'shish{% endif %}
     </h1>
-    <form method="post" class="space-y-4">
+    <form method="post" class="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm">
         {% csrf_token %}
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Nomi</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Nomi</label>
             {{ form.name }}
         </div>
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1">Bazaviy narx</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Bazaviy narx</label>
             {{ form.base_price }}
         </div>
         <div class="flex justify-between mt-4">
             <a href="{% url 'apps:service_list' %}"
-               class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+               class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                 ← Xizmatlar ro'yxati
             </a>
             <button type="submit"
-                    class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+                    class="inline-flex items-center rounded-full bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md">
                 Saqlash
             </button>
         </div>

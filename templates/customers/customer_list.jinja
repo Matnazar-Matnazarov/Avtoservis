@@ -4,35 +4,35 @@
 
 {% block content %}
 <div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">Mijozlar</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+    <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">Mijozlar</h1>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Ism, telefon yoki telegram username bo'yicha qidiruv
         </p>
     </div>
     <a href="{% url 'apps:customer_create' %}"
-       class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+       class="inline-flex items-center rounded-full bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md">
         + Yangi mijoz
     </a>
 </div>
 
-<form method="get" class="mb-4">
-    <div class="flex gap-2">
+<div class="mb-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-3 sm:p-4">
+    <form method="get" class="flex flex-col sm:flex-row gap-2 items-stretch sm:items-center">
         <input type="text" name="q"
                value="{{ q }}"
                placeholder="Ism yoki telefon..."
-               class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+               class="w-full rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/80 px-3.5 py-2 text-xs sm:text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/70 focus:border-emerald-500">
         <button type="submit"
-                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+                class="inline-flex items-center justify-center rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/70 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             Qidirish
         </button>
-    </div>
-</form>
+    </form>
+</div>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
+<div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 overflow-hidden shadow-lg shadow-black/5 dark:shadow-black/40">
     <div class="overflow-x-auto">
         <table class="min-w-full text-xs sm:text-sm">
-            <thead class="bg-slate-900/80 text-slate-300">
+            <thead class="bg-slate-50/80 dark:bg-slate-900/80 text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-800">
             <tr>
                 <th class="px-3 py-2 text-left font-medium">FIO</th>
                 <th class="px-3 py-2 text-left font-medium">Telefon</th>
@@ -40,29 +40,29 @@
                 <th class="px-3 py-2 text-right font-medium"></th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800">
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
             {% for customer in customers %}
-                <tr class="hover:bg-slate-900/70">
-                    <td class="px-3 py-2 text-slate-100">
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70">
+                    <td class="px-3 py-2 text-slate-900 dark:text-slate-100">
                         <a href="{% url 'apps:customer_detail' customer.pk %}"
                            class="hover:underline">
                             {{ customer.full_name }}
                         </a>
                     </td>
-                    <td class="px-3 py-2 text-slate-300">{{ customer.phone }}</td>
-                    <td class="px-3 py-2 text-slate-300">
+                    <td class="px-3 py-2 text-slate-700 dark:text-slate-300">{{ customer.phone }}</td>
+                    <td class="px-3 py-2 text-slate-600 dark:text-slate-300">
                         {% if customer.telegram_username %}@{{ customer.telegram_username }}{% endif %}
                     </td>
                     <td class="px-3 py-2 text-right">
                         <a href="{% url 'apps:customer_update' customer.pk %}"
-                           class="text-xs text-emerald-400 hover:text-emerald-300">
+                           class="inline-flex items-center rounded-full border border-slate-200 dark:border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                             Tahrirlash
                         </a>
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="4" class="px-3 py-4 text-center text-slate-500">
+                    <td colspan="4" class="px-3 py-4 text-center text-slate-500 dark:text-slate-500">
                         Mijozlar topilmadi
                     </td>
                 </tr>

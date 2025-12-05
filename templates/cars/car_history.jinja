@@ -4,42 +4,42 @@
 
 {% block content %}
 <div class="mb-4 flex items-center justify-between">
-    <div>
-        <h1 class="text-xl font-semibold text-white">
+    <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
             Tarix: {{ car.plate_number }} · {{ car.brand }} {{ car.model }}
         </h1>
-        <p class="text-xs text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Mijoz: {{ car.customer.full_name }} · {{ car.customer.phone }}
         </p>
     </div>
     <div class="flex flex-wrap gap-2 text-xs">
         <a href="{% url 'apps:car_update' car.pk %}"
-           class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+           class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             Mashina tahrirlash
         </a>
         <a href="{% url 'apps:order_create' %}?car={{ car.pk }}&customer={{ car.customer.pk }}"
-           class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+           class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             Yangi buyurtma
         </a>
     </div>
 </div>
 
-<div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-    <h2 class="text-sm font-semibold text-slate-200 mb-2">Servis tarixi</h2>
+<div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+    <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Servis tarixi</h2>
     <div class="overflow-x-auto">
         <table class="min-w-full text-xs sm:text-sm">
-            <thead class="bg-slate-900/70 text-slate-300">
+            <thead class="bg-slate-50/80 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300">
             <tr>
                 <th class="px-3 py-2 text-left font-medium">Sana</th>
                 <th class="px-3 py-2 text-left font-medium">Status</th>
                 <th class="px-3 py-2 text-right font-medium">Umumiy summa</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800">
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
             {% for order in orders %}
-                <tr class="hover:bg-slate-900/70 cursor-pointer"
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70 cursor-pointer"
                     onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
-                    <td class="px-3 py-2 text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="px-3 py-2 text-slate-600 dark:text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
                     <td class="px-3 py-2">
                         {% if order.status == "new" %}
                             <span class="status-badge-new">Yangi</span>
@@ -55,13 +55,13 @@
                             </span>
                         {% endif %}
                     </td>
-                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                    <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
                         {{ order.total_amount|floatformat:0 }} so'm
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="3" class="px-3 py-4 text-center text-slate-500">
+                    <td colspan="3" class="px-3 py-4 text-center text-slate-500 dark:text-slate-500">
                         Hozircha servis tarixi yo'q
                     </td>
                 </tr>
@@ -73,7 +73,7 @@
 </div>
 
 <a href="{% url 'apps:car_list' %}"
-   class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition mt-4">
+   class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm mt-4">
     ← Mashinalar ro'yxatiga qaytish
 </a>
 {% endblock %}

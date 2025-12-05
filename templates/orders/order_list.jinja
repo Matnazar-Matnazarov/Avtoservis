@@ -3,111 +3,167 @@
 {% block title %}Buyurtmalar ro'yxati{% endblock %}
 
 {% block content %}
-<div class="flex items-center justify-between mb-6">
-    <div>
-        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">Buyurtmalar</h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">Buyurtmalar</h1>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Telefon, mashina raqami va sana bo'yicha buyurtmalarni tezkor qidirish
         </p>
     </div>
     <div class="flex items-center gap-2">
         <a href="{% url 'apps:customer_create' %}"
-           class="hidden sm:inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
-            + Mijoz
+           class="hidden sm:inline-flex items-center gap-1.5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Mijoz
         </a>
         <a href="{% url 'apps:order_create' %}"
-           class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
-            + Yangi buyurtma
+           class="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md hover:shadow-emerald-500/50 transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+            </svg>
+            Yangi buyurtma
         </a>
     </div>
 </div>
 
-<form method="get" class="mb-5">
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3">
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Telefon</label>
-            <input type="text" name="phone"
-                   value="{{ filter.phone }}"
-                   placeholder="+998..."
-                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+<div class="mb-6 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-lg shadow-black/5 dark:shadow-black/50 p-4 sm:p-6">
+    <form method="get" id="search-form" class="space-y-4">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-4">
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Telefon</span>
+                </label>
+                <input type="text" 
+                       name="phone"
+                       id="phone-input"
+                       value="{{ filter.phone }}"
+                       placeholder="+998901234567"
+                       class="input input-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10">
+            </div>
+            
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Mashina raqami</span>
+                </label>
+                <input type="text" 
+                       name="plate"
+                       id="plate-input"
+                       value="{{ filter.plate }}"
+                       placeholder="01A123BC"
+                       class="input input-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10">
+            </div>
+            
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Status</span>
+                </label>
+                <select name="status"
+                        id="status-select"
+                        class="select select-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10">
+                    <option value="">Hammasi</option>
+                    <option value="new" {% if filter.status == "new" %}selected{% endif %}>Yangi</option>
+                    <option value="in_progress" {% if filter.status == "in_progress" %}selected{% endif %}>Jarayonda</option>
+                    <option value="checking" {% if filter.status == "checking" %}selected{% endif %}>Tekshirilmoqda</option>
+                    <option value="completed" {% if filter.status == "completed" %}selected{% endif %}>Yakunlangan</option>
+                </select>
+            </div>
+            
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Sana dan</span>
+                </label>
+                <input type="date" 
+                       name="date_from"
+                       id="date-from-input"
+                       value="{{ filter.date_from }}"
+                       class="input input-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10">
+            </div>
+            
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Sana gacha</span>
+                </label>
+                <input type="date" 
+                       name="date_to"
+                       id="date-to-input"
+                       value="{{ filter.date_to }}"
+                       class="input input-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10">
+            </div>
+            
+            <div class="form-control">
+                <label class="label py-1">
+                    <span class="label-text text-xs font-medium text-slate-700 dark:text-slate-300">Tezkor qidiruv</span>
+                </label>
+                <div class="relative">
+                    <input type="text" 
+                           name="q"
+                           id="quick-search-input"
+                           value="{{ filter.q }}"
+                           placeholder="Telefon, raqam yoki ism"
+                           class="input input-bordered w-full bg-white dark:bg-slate-900/80 border-slate-300 dark:border-slate-700 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-emerald-500 focus:outline-none text-xs sm:text-sm h-9 sm:h-10 pl-9">
+                    <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500 dark:text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                    </svg>
+                </div>
+            </div>
         </div>
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Mashina raqami</label>
-            <input type="text" name="plate"
-                   value="{{ filter.plate }}"
-                   placeholder="01A123BC"
-                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
+        
+        <div class="flex flex-col sm:flex-row justify-end gap-2 pt-2">
+            <a href="."
+               class="inline-flex items-center justify-center gap-1.5 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/60 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 hover:border-slate-400 dark:hover:border-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors shadow-sm">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+                </svg>
+                Tozalash
+            </a>
+            <button type="submit"
+                    class="inline-flex items-center justify-center gap-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md hover:shadow-emerald-500/50 border border-transparent transition-colors">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+                </svg>
+                Qidirish
+            </button>
         </div>
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Status</label>
-            <select name="status"
-                    class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
-                <option value="">Hammasi</option>
-                <option value="new" {% if filter.status == "new" %}selected{% endif %}>Yangi</option>
-                <option value="in_progress" {% if filter.status == "in_progress" %}selected{% endif %}>Jarayonda</option>
-                <option value="checking" {% if filter.status == "checking" %}selected{% endif %}>Tekshirilmoqda</option>
-                <option value="completed" {% if filter.status == "completed" %}selected{% endif %}>Yakunlangan</option>
-            </select>
-        </div>
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Sana dan</label>
-            <input type="date" name="date_from"
-                   value="{{ filter.date_from }}"
-                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
-        </div>
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Sana gacha</label>
-            <input type="date" name="date_to"
-                   value="{{ filter.date_to }}"
-                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
-        </div>
-        <div class="space-y-1">
-            <label class="block text-xs font-medium text-slate-300">Tezkor qidiruv</label>
-            <input type="text" name="q"
-                   value="{{ filter.q }}"
-                   placeholder="Telefon yoki raqam"
-                   class="w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 text-xs sm:text-sm text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500">
-        </div>
-    </div>
-    <div class="flex justify-end gap-2 mt-3">
-        <a href="."
-           class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
-            Tozalash
-        </a>
-        <button type="submit"
-                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-3 py-1.5 text-xs sm:text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40 transition">
-            Qidirish
-        </button>
-    </div>
-</form>
+    </form>
+</div>
 
-<div class="overflow-hidden rounded-2xl border border-slate-800 bg-slate-950/60 shadow-xl shadow-black/50">
+<div class="overflow-hidden rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-lg shadow-black/5 dark:shadow-black/50">
     <div class="overflow-x-auto">
-        <table class="min-w-full text-left text-xs sm:text-sm">
-            <thead class="bg-slate-900/80 border-b border-slate-800 text-slate-300">
+        <table class="table table-zebra w-full">
+            <thead class="bg-slate-50/80 dark:bg-slate-900/80 border-b border-slate-200 dark:border-slate-800">
             <tr>
-                <th class="px-3 py-2 font-medium">ID</th>
-                <th class="px-3 py-2 font-medium">Sana</th>
-                <th class="px-3 py-2 font-medium">Mijoz</th>
-                <th class="px-3 py-2 font-medium">Telefon</th>
-                <th class="px-3 py-2 font-medium">Mashina</th>
-                <th class="px-3 py-2 font-medium">Status</th>
-                <th class="px-3 py-2 font-medium">To'lov holati</th>
-                <th class="px-3 py-2 font-medium text-right">Umumiy summa</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3">ID</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3">Sana</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3">Mijoz</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3 hidden sm:table-cell">Telefon</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3">Mashina</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3">Status</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3 hidden lg:table-cell">To'lov holati</th>
+                <th class="text-xs sm:text-sm font-semibold text-slate-700 dark:text-slate-300 px-3 sm:px-4 py-3 text-right">Summa</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800">
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
             {% for order in orders %}
-                <tr class="hover:bg-slate-900/70 cursor-pointer"
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70 cursor-pointer transition-colors"
                     onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
-                    <td class="px-3 py-2 text-slate-300">#{{ order.id }}</td>
-                    <td class="px-3 py-2 text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
-                    <td class="px-3 py-2 text-slate-100">{{ order.customer.full_name }}</td>
-                    <td class="px-3 py-2 text-slate-300">{{ order.customer.phone }}</td>
-                    <td class="px-3 py-2 text-slate-300">
-                        {{ order.car.plate_number }} · {{ order.car.brand }} {{ order.car.model }}
+                    <td class="px-3 sm:px-4 py-3 text-slate-700 dark:text-slate-300 font-medium">#{{ order.id }}</td>
+                    <td class="px-3 sm:px-4 py-3 text-slate-600 dark:text-slate-400 text-xs sm:text-sm">
+                        <div class="flex flex-col">
+                            <span>{{ order.created_at|date:"Y-m-d" }}</span>
+                            <span class="text-slate-500 dark:text-slate-500 text-[10px] sm:text-xs">{{ order.created_at|date:"H:i" }}</span>
+                        </div>
                     </td>
-                    <td class="px-3 py-2">
+                    <td class="px-3 sm:px-4 py-3 text-slate-900 dark:text-slate-100 font-medium text-xs sm:text-sm">{{ order.customer.full_name }}</td>
+                    <td class="px-3 sm:px-4 py-3 text-slate-700 dark:text-slate-300 text-xs sm:text-sm hidden sm:table-cell">{{ order.customer.phone }}</td>
+                    <td class="px-3 sm:px-4 py-3 text-slate-700 dark:text-slate-300 text-xs sm:text-sm">
+                        <div class="flex flex-col">
+                            <span class="font-medium">{{ order.car.plate_number }}</span>
+                            <span class="text-slate-500 dark:text-slate-500 text-[10px] sm:text-xs">{{ order.car.brand }} {{ order.car.model }}</span>
+                        </div>
+                    </td>
+                    <td class="px-3 sm:px-4 py-3">
                         {% if order.status == "new" %}
                             <span class="status-badge-new">Yangi</span>
                         {% elif order.status == "in_progress" %}
@@ -117,22 +173,28 @@
                         {% elif order.status == "completed" %}
                             <span class="status-badge-completed">Yakunlangan</span>
                         {% else %}
-                            <span class="inline-flex items-center rounded-full bg-slate-700 px-2 py-0.5 text-xs text-white">
+                            <span class="inline-flex items-center rounded-full bg-slate-600 dark:bg-slate-700 px-2 py-0.5 text-xs text-white">
                                 {{ order.get_status_display }}
                             </span>
                         {% endif %}
                     </td>
-                    <td class="px-3 py-2 text-slate-200">
+                    <td class="px-3 sm:px-4 py-3 text-slate-800 dark:text-slate-200 text-xs sm:text-sm hidden lg:table-cell">
                         {{ order.get_payment_status_display }}
                     </td>
-                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
-                        {{ order.total_amount|floatformat:0 }} so'm
+                    <td class="px-3 sm:px-4 py-3 text-right text-emerald-600 dark:text-emerald-400 font-semibold text-xs sm:text-sm">
+                        {{ order.total_amount|floatformat:0 }} <span class="text-slate-500 dark:text-slate-500 font-normal">so'm</span>
                     </td>
                 </tr>
             {% empty %}
                 <tr>
-                    <td colspan="8" class="px-3 py-6 text-center text-slate-500">
-                        Buyurtmalar topilmadi
+                    <td colspan="8" class="px-3 sm:px-4 py-12 text-center">
+                        <div class="flex flex-col items-center justify-center gap-3">
+                            <svg class="w-12 h-12 text-slate-400 dark:text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                            </svg>
+                            <p class="text-slate-600 dark:text-slate-400 text-sm font-medium">Buyurtmalar topilmadi</p>
+                            <p class="text-slate-500 dark:text-slate-500 text-xs">Qidiruv parametrlarini o'zgartiring yoki yangi buyurtma yarating</p>
+                        </div>
                     </td>
                 </tr>
             {% endfor %}
@@ -140,4 +202,78 @@
         </table>
     </div>
 </div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function() {
+    const form = document.getElementById('search-form');
+    if (!form) return;
+    
+    // Enter bosilganda submit qilish
+    const inputs = form.querySelectorAll('input, select');
+    inputs.forEach(input => {
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                form.submit();
+            }
+        });
+    });
+    
+    // Select o'zgarganda avtomatik submit
+    const statusSelect = document.getElementById('status-select');
+    if (statusSelect) {
+        statusSelect.addEventListener('change', function() {
+            form.submit();
+        });
+    }
+    
+    // Date inputlar o'zgarganda avtomatik submit
+    const dateFrom = document.getElementById('date-from-input');
+    const dateTo = document.getElementById('date-to-input');
+    
+    if (dateFrom) {
+        dateFrom.addEventListener('change', function() {
+            // Agar date_to mavjud bo'lsa va date_from > date_to bo'lsa, date_to ni tozalash
+            if (dateTo && dateTo.value && this.value > dateTo.value) {
+                dateTo.value = '';
+            }
+            form.submit();
+        });
+    }
+    
+    if (dateTo) {
+        dateTo.addEventListener('change', function() {
+            // Agar date_from mavjud bo'lsa va date_to < date_from bo'lsa, date_from ni tozalash
+            if (dateFrom && dateFrom.value && this.value < dateFrom.value) {
+                dateFrom.value = '';
+            }
+            form.submit();
+        });
+    }
+    
+    // Tezkor qidiruv uchun debounce (500ms)
+    let searchTimeout;
+    const quickSearch = document.getElementById('quick-search-input');
+    if (quickSearch) {
+        quickSearch.addEventListener('input', function() {
+            clearTimeout(searchTimeout);
+            searchTimeout = setTimeout(function() {
+                // Faqat agar boshqa inputlar bo'sh bo'lsa yoki tezkor qidiruv to'ldirilgan bo'lsa
+                const phone = document.getElementById('phone-input').value.trim();
+                const plate = document.getElementById('plate-input').value.trim();
+                const status = document.getElementById('status-select').value;
+                const dateFrom = document.getElementById('date-from-input').value;
+                const dateTo = document.getElementById('date-to-input').value;
+                
+                // Agar tezkor qidiruv bo'sh bo'lsa va boshqa filtrlarsiz bo'lsa, submit qilish
+                if (quickSearch.value.trim() || (!phone && !plate && !status && !dateFrom && !dateTo)) {
+                    form.submit();
+                }
+            }, 500);
+        });
+    }
+})();
+</script>
 {% endblock %}

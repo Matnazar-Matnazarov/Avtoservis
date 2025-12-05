@@ -4,33 +4,33 @@
 
 {% block content %}
 <div class="max-w-xl mx-auto">
-    <h1 class="text-xl font-semibold text-white mb-4">
+    <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white mb-4">
         {% if car %}Mashina tahrirlash{% else %}Yangi mashina qo'shish{% endif %}
     </h1>
-    <form method="post" class="space-y-4">
+    <form method="post" class="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm">
         {% csrf_token %}
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.customer.id_for_label }}">Mijoz</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1" for="{{ form.customer.id_for_label }}">Mijoz</label>
             {{ form.customer }}
         </div>
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.brand.id_for_label }}">Brand</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1" for="{{ form.brand.id_for_label }}">Brand</label>
             {{ form.brand }}
         </div>
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.model.id_for_label }}">Model</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1" for="{{ form.model.id_for_label }}">Model</label>
             {{ form.model }}
         </div>
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.plate_number.id_for_label }}">Raqam</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1" for="{{ form.plate_number.id_for_label }}">Raqam</label>
             {{ form.plate_number }}
         </div>
         <div>
-            <label class="block text-xs font-medium text-slate-300 mb-1" for="{{ form.vin.id_for_label }}">VIN</label>
+            <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1" for="{{ form.vin.id_for_label }}">VIN</label>
             {{ form.vin }}
         </div>
         <button type="submit"
-                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+                class="inline-flex items-center rounded-full bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md">
             Saqlash
         </button>
     </form>

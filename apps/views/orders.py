@@ -25,14 +25,14 @@ def order_list(request):
     - Har bir buyurtma uchun rangli status
     """
 
-    orders = Order.objects.select_related("customer", "car", "master")
+    orders = Order.objects.select_related("customer", "car", "master").order_by("-created_at")
 
-    phone = request.GET.get("phone")
-    plate = request.GET.get("plate")
-    status = request.GET.get("status")
-    date_from = request.GET.get("date_from")
-    date_to = request.GET.get("date_to")
-    query = request.GET.get("q")
+    phone = request.GET.get("phone", "").strip()
+    plate = request.GET.get("plate", "").strip()
+    status = request.GET.get("status", "").strip()
+    date_from = request.GET.get("date_from", "").strip()
+    date_to = request.GET.get("date_to", "").strip()
+    query = request.GET.get("q", "").strip()
 
     if phone:
         orders = orders.filter(customer__phone__icontains=phone)
@@ -67,12 +67,12 @@ def order_list(request):
     context = {
         "orders": orders,
         "filter": {
-            "phone": phone or "",
-            "plate": plate or "",
-            "status": status or "",
-            "date_from": date_from or "",
-            "date_to": date_to or "",
-            "q": query or "",
+            "phone": phone,
+            "plate": plate,
+            "status": status,
+            "date_from": date_from,
+            "date_to": date_to,
+            "q": query,
         },
     }
     return render(request, "orders/order_list.jinja", context)

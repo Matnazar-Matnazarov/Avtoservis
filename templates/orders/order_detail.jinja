@@ -3,40 +3,40 @@
 {% block title %}Buyurtma #{{ order.id }}{% endblock %}
 
 {% block content %}
-<div class="flex items-start justify-between mb-6 gap-4">
-    <div>
-        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-white">
+<div class="flex flex-col md:flex-row md:items-start md:justify-between mb-6 gap-4">
+    <div class="space-y-2">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
             Buyurtma #{{ order.id }}
         </h1>
-        <p class="text-xs sm:text-sm text-slate-400 mt-1">
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
             Yaratilgan: {{ order.created_at|date:"Y-m-d H:i" }}
         </p>
-        <div class="flex flex-wrap gap-2 mt-3 text-xs">
+        <div class="flex flex-wrap gap-2 mt-1 text-xs">
             {% if order.payment_status != "paid" %}
                 <a href="{% url 'apps:order_update' order.pk %}"
-                   class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+                   class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                     Tahrirlash
                 </a>
             {% else %}
-                <span class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-500 cursor-not-allowed">
+                <span class="inline-flex items-center rounded-full border border-slate-200 dark:border-slate-700 px-3 py-1 text-[11px] font-medium text-slate-400 dark:text-slate-500 bg-slate-50 dark:bg-slate-900/40 cursor-not-allowed">
                     Tahrirlash (to'langan)
                 </span>
             {% endif %}
             <a href="{% url 'apps:order_receipt' order.pk %}"
-               class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+               class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                 Chek
             </a>
             <a href="{% url 'apps:customer_detail' order.customer.pk %}"
-               class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+               class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                 Mijoz sahifasi
             </a>
             <a href="{% url 'apps:car_history' order.car.pk %}"
-               class="inline-flex items-center rounded-lg border border-slate-700 px-2.5 py-1 text-[11px] font-medium text-slate-200 hover:bg-slate-800 transition">
+               class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3 py-1 text-[11px] font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
                 Mashina tarixi
             </a>
         </div>
     </div>
-    <div class="text-right space-y-1">
+    <div class="text-left md:text-right space-y-1">
         <div>
             {% if order.status == "new" %}
                 <span class="status-badge-new">Yangi</span>
@@ -52,7 +52,7 @@
                 </span>
             {% endif %}
         </div>
-        <p class="text-xs sm:text-sm text-slate-300">
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-300">
             To'lov: <span class="font-semibold">{{ order.get_payment_status_display }}</span>
             {% if order.payment_type %}
                 · Turi: <span class="font-semibold">{{ order.get_payment_type_display }}</span>
@@ -62,31 +62,31 @@
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-5">
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-        <h2 class="text-sm font-semibold text-slate-200 mb-3">Mijoz</h2>
-        <p class="text-sm text-slate-100 mb-1">
-            <span class="text-slate-400">FIO:</span> {{ order.customer.full_name }}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-3">Mijoz</h2>
+        <p class="text-sm text-slate-700 dark:text-slate-100 mb-1">
+            <span class="text-slate-500 dark:text-slate-400">FIO:</span> {{ order.customer.full_name }}
         </p>
-        <p class="text-sm text-slate-100 mb-1">
-            <span class="text-slate-400">Telefon:</span> {{ order.customer.phone }}
+        <p class="text-sm text-slate-700 dark:text-slate-100 mb-1">
+            <span class="text-slate-500 dark:text-slate-400">Telefon:</span> {{ order.customer.phone }}
         </p>
         {% if order.customer.telegram_username %}
-            <p class="text-sm text-slate-100">
-                <span class="text-slate-400">Telegram:</span> @{{ order.customer.telegram_username }}
+            <p class="text-sm text-slate-700 dark:text-slate-100">
+                <span class="text-slate-500 dark:text-slate-400">Telegram:</span> @{{ order.customer.telegram_username }}
             </p>
         {% endif %}
     </div>
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-        <h2 class="text-sm font-semibold text-slate-200 mb-3">Mashina</h2>
-        <p class="text-sm text-slate-100 mb-1">
-            <span class="text-slate-400">Raqami:</span> {{ order.car.plate_number }}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-3">Mashina</h2>
+        <p class="text-sm text-slate-700 dark:text-slate-100 mb-1">
+            <span class="text-slate-500 dark:text-slate-400">Raqami:</span> {{ order.car.plate_number }}
         </p>
-        <p class="text-sm text-slate-100 mb-1">
-            <span class="text-slate-400">Model:</span> {{ order.car.brand }} {{ order.car.model }}
+        <p class="text-sm text-slate-700 dark:text-slate-100 mb-1">
+            <span class="text-slate-500 dark:text-slate-400">Model:</span> {{ order.car.brand }} {{ order.car.model }}
         </p>
         {% if order.car.vin %}
-            <p class="text-sm text-slate-100">
-                <span class="text-slate-400">VIN:</span> {{ order.car.vin }}
+            <p class="text-sm text-slate-700 dark:text-slate-100">
+                <span class="text-slate-500 dark:text-slate-400">VIN:</span> {{ order.car.vin }}
             </p>
         {% endif %}
     </div>
@@ -94,13 +94,13 @@
 
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-4">
     <div class="lg:col-span-2 space-y-4">
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
-            <div class="px-4 py-3 border-b border-slate-800 flex items-center justify-between">
-                <h2 class="text-sm font-semibold text-slate-200">Xizmatlar</h2>
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 overflow-hidden shadow-sm">
+            <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800 flex items-center justify-between">
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">Xizmatlar</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs sm:text-sm">
-                    <thead class="bg-slate-900/70 text-slate-300">
+                    <thead class="bg-slate-50/80 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300">
                     <tr>
                         <th class="px-3 py-2 text-left font-medium">#</th>
                         <th class="px-3 py-2 text-left font-medium">Xizmat</th>
@@ -110,11 +110,11 @@
                         <th class="px-3 py-2 text-right font-medium">Jami</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     {% for item in services %}
                         <tr>
-                            <td class="px-3 py-2 text-slate-400">{{ forloop.counter }}</td>
-                            <td class="px-3 py-2 text-slate-100">{{ item.service.name }}</td>
+                            <td class="px-3 py-2 text-slate-500 dark:text-slate-400">{{ forloop.counter }}</td>
+                            <td class="px-3 py-2 text-slate-900 dark:text-slate-100">{{ item.service.name }}</td>
                             <td class="px-3 py-2">
                                 {% if item.status == "in_progress" %}
                                     <span class="status-badge-in_progress">Jarayonda</span>
@@ -130,23 +130,23 @@
                                     </span>
                                 {% endif %}
                             </td>
-                            <td class="px-3 py-2 text-right text-slate-100">
+                            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-100">
                                 {{ item.price|floatformat:0 }} so'm
                             </td>
-                            <td class="px-3 py-2 text-right text-slate-300">
+                            <td class="px-3 py-2 text-right text-slate-500 dark:text-slate-300">
                                 {% if item.discount %}
                                     <span class="text-amber-400 font-medium">-{{ item.discount|floatformat:2 }}%</span>
                                 {% else %}
                                     <span class="text-slate-500">—</span>
                                 {% endif %}
                             </td>
-                            <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                            <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
                                 {{ item.line_total|floatformat:0 }} so'm
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="6" class="px-3 py-4 text-center text-slate-500">
+                            <td colspan="6" class="px-3 py-4 text-center text-slate-500 dark:text-slate-500">
                                 Xizmatlar qo'shilmagan
                             </td>
                         </tr>
@@ -156,13 +156,13 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 overflow-hidden">
-            <div class="px-4 py-3 border-b border-slate-800">
-                <h2 class="text-sm font-semibold text-slate-200">Ehtiyot qismlar</h2>
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 overflow-hidden shadow-sm">
+            <div class="px-4 py-3 border-b border-slate-200 dark:border-slate-800">
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">Ehtiyot qismlar</h2>
             </div>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs sm:text-sm">
-                    <thead class="bg-slate-900/70 text-slate-300">
+                    <thead class="bg-slate-50/80 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300">
                     <tr>
                         <th class="px-3 py-2 text-left font-medium">#</th>
                         <th class="px-3 py-2 text-left font-medium">Nomi</th>
@@ -176,11 +176,11 @@
                     <tbody class="divide-y divide-slate-800">
                     {% for item in parts %}
                         <tr>
-                            <td class="px-3 py-2 text-slate-400">{{ forloop.counter }}</td>
-                            <td class="px-3 py-2 text-slate-100">{{ item.part.name }}</td>
-                            <td class="px-3 py-2 text-slate-300">{{ item.part.article }}</td>
-                            <td class="px-3 py-2 text-slate-100">{{ item.quantity }}</td>
-                            <td class="px-3 py-2 text-right text-slate-100">
+                            <td class="px-3 py-2 text-slate-500 dark:text-slate-400">{{ forloop.counter }}</td>
+                            <td class="px-3 py-2 text-slate-900 dark:text-slate-100">{{ item.part.name }}</td>
+                            <td class="px-3 py-2 text-slate-600 dark:text-slate-300">{{ item.part.article }}</td>
+                            <td class="px-3 py-2 text-slate-900 dark:text-slate-100">{{ item.quantity }}</td>
+                            <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-100">
                                 {{ item.price|floatformat:0 }} so'm
                             </td>
                             <td class="px-3 py-2 text-right text-slate-300">
@@ -196,7 +196,7 @@
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="7" class="px-3 py-4 text-center text-slate-500">
+                            <td colspan="7" class="px-3 py-4 text-center text-slate-500 dark:text-slate-500">
                                 Ehtiyot qismlar qo'shilmagan
                             </td>
                         </tr>
@@ -208,66 +208,66 @@
     </div>
 
     <div class="space-y-4">
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <h2 class="text-sm font-semibold text-slate-200 mb-3">Umumiy ma'lumot</h2>
-            <p class="text-sm text-slate-100 mb-2">
-                <span class="text-slate-400">Usta:</span>
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-3">Umumiy ma'lumot</h2>
+            <p class="text-sm text-slate-700 dark:text-slate-100 mb-2">
+                <span class="text-slate-500 dark:text-slate-400">Usta:</span>
                 {% if order.master %}
                     {{ order.master.full_name }}
                 {% else %}
-                    <span class="text-slate-500">Biriktirilmagan</span>
+                    <span class="text-slate-500 dark:text-slate-500">Biriktirilmagan</span>
                 {% endif %}
             </p>
             {% if order.description %}
-                <p class="text-sm text-slate-100 mt-1">
-                    <span class="text-slate-400 block mb-1">Muammo tavsifi:</span>
+                <p class="text-sm text-slate-700 dark:text-slate-100 mt-1">
+                    <span class="text-slate-500 dark:text-slate-400 block mb-1">Muammo tavsifi:</span>
                     <span class="whitespace-pre-line">{{ order.description }}</span>
                 </p>
             {% endif %}
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <h2 class="text-sm font-semibold text-slate-200 mb-3">Hisob-kitob</h2>
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-3">Hisob-kitob</h2>
             <div class="space-y-2 text-sm">
                 <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Xizmatlar jami:</span>
-                    <span class="text-slate-100 font-medium">
+                    <span class="text-slate-600 dark:text-slate-300">Xizmatlar jami:</span>
+                    <span class="text-slate-900 dark:text-slate-100 font-medium">
                         {{ order.services_total|floatformat:0 }} so'm
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Ehtiyot qismlar jami:</span>
-                    <span class="text-slate-100 font-medium">
+                    <span class="text-slate-600 dark:text-slate-300">Ehtiyot qismlar jami:</span>
+                    <span class="text-slate-900 dark:text-slate-100 font-medium">
                         {{ order.parts_total|floatformat:0 }} so'm
                     </span>
                 </div>
-                <div class="h-px bg-slate-800 my-2"></div>
+                <div class="h-px bg-slate-200 dark:bg-slate-800 my-2"></div>
                 <div class="flex items-center justify-between">
-                    <span class="text-slate-200">Umumiy summa:</span>
-                    <span class="text-emerald-400 font-semibold text-lg">
+                    <span class="text-slate-900 dark:text-slate-200">Umumiy summa:</span>
+                    <span class="text-emerald-600 dark:text-emerald-400 font-semibold text-lg">
                         {{ order.total_amount|floatformat:0 }} so'm
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-slate-300">To'langan summa:</span>
-                    <span class="text-emerald-300 font-medium">
+                    <span class="text-slate-600 dark:text-slate-300">To'langan summa:</span>
+                    <span class="text-emerald-600 dark:text-emerald-300 font-medium">
                         {{ order.paid_total|floatformat:0 }} so'm
                     </span>
                 </div>
                 <div class="flex items-center justify-between">
-                    <span class="text-slate-300">Qoldiq:</span>
-                    <span class="text-red-300 font-medium">
+                    <span class="text-slate-600 dark:text-slate-300">Qoldiq:</span>
+                    <span class="text-red-600 dark:text-red-300 font-medium">
                         {{ order.remaining_amount|floatformat:0 }} so'm
                     </span>
                 </div>
             </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <h2 class="text-sm font-semibold text-slate-200 mb-3">To'lovlar tarixi</h2>
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-3">To'lovlar tarixi</h2>
             <div class="overflow-x-auto">
                 <table class="min-w-full text-xs sm:text-sm">
-                    <thead class="bg-slate-900/70 text-slate-300">
+                    <thead class="bg-slate-50/80 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300">
                     <tr>
                         <th class="px-3 py-2 text-left font-medium">Sana</th>
                         <th class="px-3 py-2 text-left font-medium">Turi</th>
@@ -278,22 +278,22 @@
                     <tbody class="divide-y divide-slate-800">
                     {% for p in payments %}
                         <tr>
-                            <td class="px-3 py-2 text-slate-400">
+                            <td class="px-3 py-2 text-slate-500 dark:text-slate-400">
                                 {{ p.paid_at|date:"Y-m-d H:i" }}
                             </td>
-                            <td class="px-3 py-2 text-slate-100">
+                            <td class="px-3 py-2 text-slate-900 dark:text-slate-100">
                                 {{ p.get_payment_type_display }}
                             </td>
                             <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
                                 {{ p.amount|floatformat:0 }} so'm
                             </td>
-                            <td class="px-3 py-2 text-slate-300">
+                            <td class="px-3 py-2 text-slate-600 dark:text-slate-300">
                                 {{ p.note }}
                             </td>
                         </tr>
                     {% empty %}
                         <tr>
-                            <td colspan="4" class="px-3 py-4 text-center text-slate-500">
+                            <td colspan="4" class="px-3 py-4 text-center text-slate-500 dark:text-slate-500">
                                 Hozircha to'lovlar kiritilmagan
                             </td>
                         </tr>
@@ -303,24 +303,24 @@
             </div>
         </div>
 
-        <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
+        <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
             <div class="flex items-center justify-between mb-3">
-                <h2 class="text-sm font-semibold text-slate-200">Fotosuratlar</h2>
+                <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">Fotosuratlar</h2>
             </div>
             {% if photos_before or photos_after %}
                 {% if photos_before %}
-                    <p class="text-xs font-semibold text-slate-400 mb-1">Oldin</p>
+                    <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Oldin</p>
                     <div class="flex flex-wrap gap-2 mb-3">
                         {% for p in photos_before %}
                             <a href="{{ p.image.url }}" target="_blank">
                                 <img src="{{ p.image.url }}" alt=""
-                                     class="h-20 w-20 rounded-lg border border-slate-700 object-cover">
+                                     class="h-20 w-20 rounded-lg border border-slate-200 dark:border-slate-700 object-cover">
                             </a>
                         {% endfor %}
                     </div>
                 {% endif %}
                 {% if photos_after %}
-                    <p class="text-xs font-semibold text-slate-400 mb-1">Keyin</p>
+                    <p class="text-xs font-semibold text-slate-600 dark:text-slate-400 mb-1">Keyin</p>
                     <div class="flex flex-wrap gap-2">
                         {% for p in photos_after %}
                             <a href="{{ p.image.url }}" target="_blank">
@@ -331,7 +331,7 @@
                     </div>
                 {% endif %}
             {% else %}
-                <p class="text-xs text-slate-500">
+                <p class="text-xs text-slate-500 dark:text-slate-500">
                     Hozircha foto yuklanmagan
                 </p>
             {% endif %}
@@ -341,7 +341,7 @@
 
 <button type="button"
         onclick="window.history.back()"
-        class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition mt-4">
+        class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm mt-4">
     ← Orqaga
 </button>
 {% endblock %}

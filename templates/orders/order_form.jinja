@@ -4,13 +4,13 @@
 
 {% block content %}
 <div class="mb-4 flex items-center justify-between">
-    <h1 class="text-xl font-semibold text-white">
+    <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
         {% if order %}Buyurtmani tahrirlash #{{ order.id }}{% else %}Yangi buyurtma{% endif %}
     </h1>
 </div>
 
 {% if order and order.payment_status == "paid" %}
-    <div class="mb-4 rounded-lg border border-red-600 bg-red-500/10 px-4 py-3 text-sm text-red-200">
+    <div class="mb-4 rounded-xl border border-red-600 bg-red-500/10 px-4 py-3 text-sm text-red-200">
         <p class="font-semibold">⚠️ Diqqat!</p>
         <p>Bu buyurtma to'langan. Tahrirlab bo'lmaydi.</p>
     </div>
@@ -20,81 +20,81 @@
     {% csrf_token %}
 
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <div class="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <h2 class="text-sm font-semibold text-slate-200 mb-2">Asosiy ma'lumotlar</h2>
+        <div class="space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Asosiy ma'lumotlar</h2>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">Mijoz</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Mijoz</label>
                 {{ form.customer }}
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">Mashina</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Mashina</label>
                 {{ form.car }}
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">Usta</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Usta</label>
                 {{ form.master }}
             </div>
         </div>
 
-        <div class="space-y-3 rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-            <h2 class="text-sm font-semibold text-slate-200 mb-2">Holat va to'lov</h2>
+        <div class="space-y-3 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+            <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200 mb-2">Holat va to'lov</h2>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">Status</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Status</label>
                 {{ form.status }}
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">To'lov holati</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">To'lov holati</label>
                 {{ form.payment_status }}
             </div>
             <div>
-                <label class="block text-xs font-medium text-slate-300 mb-1">To'lov turi</label>
+                <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">To'lov turi</label>
                 {{ form.payment_type }}
             </div>
         </div>
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4">
-        <label class="block text-xs font-medium text-slate-300 mb-1">Muammo tavsifi</label>
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 shadow-sm">
+        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Muammo tavsifi</label>
         {{ form.description }}
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 sm:p-6 space-y-4">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-6 space-y-4 shadow-sm">
         <div class="flex items-center justify-between">
-            <h2 class="text-sm sm:text-base font-semibold text-slate-200">Xizmatlar</h2>
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-200">Xizmatlar</h2>
         </div>
         {{ service_formset.management_form }}
         <div id="services-container" class="space-y-3">
             {% for f in service_formset %}
-                <div class="service-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end border border-slate-800 rounded-xl p-3 sm:p-4 bg-slate-900/40 hover:bg-slate-900/60 transition"
+                <div class="service-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-4 bg-white dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition shadow-sm"
                      data-formset-prefix="services">
                     {{ f.id }}
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Xizmat</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Xizmat</label>
                         {{ f.service }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Status</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Status</label>
                         {{ f.status }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                             Narx
-                            <span class="text-[10px] text-slate-500 ml-1">(avtomatik)</span>
+                            <span class="text-[10px] text-slate-500 dark:text-slate-400 ml-1">(avtomatik)</span>
                         </label>
                         {{ f.price }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Chegirma (%)</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Chegirma (%)</label>
                         {{ f.discount }}
                     </div>
                     <div class="sm:col-span-full lg:col-span-1 flex flex-col">
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Jami</label>
-                        <div class="service-total text-sm font-semibold text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Jami</label>
+                        <div class="service-total text-sm font-semibold text-emerald-600 dark:text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                             0 so'm
                         </div>
                     </div>
                     {% if f.DELETE %}
-                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
                             {{ f.DELETE }} <span>O'chirish</span>
                         </div>
                     {% endif %}
@@ -102,48 +102,48 @@
             {% endfor %}
         </div>
         <button type="button" id="add-service-row"
-                class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-200 transition">
+                class="inline-flex items-center gap-2 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm transition-colors">
             <span class="text-base">+</span> Xizmat qo'shish
         </button>
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 sm:p-6 space-y-4">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-6 space-y-4 shadow-sm">
         <div class="flex items-center justify-between">
-            <h2 class="text-sm sm:text-base font-semibold text-slate-200">Ehtiyot qismlar</h2>
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-slate-200">Ehtiyot qismlar</h2>
         </div>
         {{ part_formset.management_form }}
         <div id="parts-container" class="space-y-3">
             {% for f in part_formset %}
-                <div class="part-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end border border-slate-800 rounded-xl p-3 sm:p-4 bg-slate-900/40 hover:bg-slate-900/60 transition"
+                <div class="part-row grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-6 gap-3 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 sm:p-4 bg-white dark:bg-slate-900/40 hover:bg-slate-50 dark:hover:bg-slate-900/60 transition shadow-sm"
                      data-formset-prefix="parts">
                     {{ f.id }}
                     <div class="sm:col-span-2">
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Detal</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Detal</label>
                         {{ f.part }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Son</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Son</label>
                         {{ f.quantity }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">
                             Narx
-                            <span class="text-[10px] text-slate-500 ml-1">(avtomatik)</span>
+                            <span class="text-[10px] text-slate-500 dark:text-slate-400 ml-1">(avtomatik)</span>
                         </label>
                         {{ f.price }}
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Chegirma (%)</label>
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Chegirma (%)</label>
                         {{ f.discount }}
                     </div>
                     <div class="sm:col-span-full lg:col-span-1 flex flex-col">
-                        <label class="block text-xs font-medium text-slate-300 mb-1.5">Jami</label>
-                        <div class="part-total text-sm font-semibold text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
+                        <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1.5">Jami</label>
+                        <div class="part-total text-sm font-semibold text-emerald-600 dark:text-emerald-400 py-2 px-3 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
                             0 so'm
                         </div>
                     </div>
                     {% if f.DELETE %}
-                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-400 pt-2 border-t border-slate-800">
+                        <div class="sm:col-span-full flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400 pt-2 border-t border-slate-200 dark:border-slate-800">
                             {{ f.DELETE }} <span>O'chirish</span>
                         </div>
                     {% endif %}
@@ -151,81 +151,81 @@
             {% endfor %}
         </div>
         <button type="button" id="add-part-row"
-                class="inline-flex items-center gap-2 rounded-lg border border-slate-700 bg-slate-800/50 hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-200 transition">
+                class="inline-flex items-center gap-2 rounded-full border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 px-4 py-2 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 shadow-sm transition-colors">
             <span class="text-base">+</span> Detal qo'shish
         </button>
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
-        <h2 class="text-sm font-semibold text-slate-200">Fotosuratlar</h2>
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 space-y-3 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">Fotosuratlar</h2>
         {{ photo_formset.management_form }}
         {% for f in photo_formset %}
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 mb-2 bg-white dark:bg-slate-900/40 shadow-sm"
                  data-formset-prefix="photos">
                 {{ f.id }}
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Rasm</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Rasm</label>
                     {{ f.image }}
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Oldin/Keyin</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Oldin/Keyin</label>
                     {{ f.is_before }}
                 </div>
                 {% if f.DELETE %}
-                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                         {{ f.DELETE }} <span>O'chirish</span>
                     </div>
                 {% endif %}
             </div>
         {% endfor %}
         <button type="button" id="add-photo-row"
-                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+                class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             + Foto qo'shish
         </button>
     </div>
 
-    <div class="rounded-2xl border border-slate-800 bg-slate-950/60 p-4 space-y-3">
-        <h2 class="text-sm font-semibold text-slate-200">To'lovlar jadvali</h2>
-        <p class="text-[11px] text-slate-400">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 space-y-3 shadow-sm">
+        <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">To'lovlar jadvali</h2>
+        <p class="text-[11px] text-slate-600 dark:text-slate-400">
             Buyurtma bo'yicha bo'lib-bo'lib to'lovlarni kiriting. To'liq to'langanda holat avtomatik yangilanadi.
         </p>
         {{ payment_formset.management_form }}
         {% for f in payment_formset %}
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-800 rounded-xl p-3 mb-2"
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 mb-2 bg-white dark:bg-slate-900/40 shadow-sm"
                  data-formset-prefix="payments">
                 {{ f.id }}
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Miqdor</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Miqdor</label>
                     {{ f.amount }}
                 </div>
                 <div>
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Turi</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Turi</label>
                     {{ f.payment_type }}
                 </div>
                 <div class="md:col-span-2">
-                    <label class="block text-xs font-medium text-slate-300 mb-1">Izoh</label>
+                    <label class="block text-xs font-medium text-slate-700 dark:text-slate-300 mb-1">Izoh</label>
                     {{ f.note }}
                 </div>
                 {% if f.DELETE %}
-                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-400">
+                    <div class="col-span-full flex items-center gap-2 text-xs text-slate-500 dark:text-slate-400">
                         {{ f.DELETE }} <span>O'chirish</span>
                     </div>
                 {% endif %}
             </div>
         {% endfor %}
         <button type="button" id="add-payment-row"
-                class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs font-medium text-slate-200 hover:bg-slate-800 transition">
+                class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             + To'lov qo'shish
         </button>
     </div>
 
-    <div class="flex justify-end gap-2">
+    <div class="flex justify-end gap-2 pt-2">
         <a href="{% if order %}{% url 'apps:order_detail' order.pk %}{% else %}{% url 'apps:order_list' %}{% endif %}"
-           class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+           class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             Bekor qilish
         </a>
         <button type="submit"
-                class="inline-flex items-center rounded-lg bg-emerald-500 hover:bg-emerald-400 px-4 py-2 text-sm font-semibold text-slate-950 shadow shadow-emerald-500/40">
+                class="inline-flex items-center rounded-full bg-emerald-600 hover:bg-emerald-500 px-4 py-2 text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 hover:shadow-md">
             Saqlash
         </button>
     </div>
