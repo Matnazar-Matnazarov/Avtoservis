@@ -96,9 +96,11 @@ def order_detail(request, pk: int):
         ),
         pk=pk,
     )
-    print(order.status)
-    # Umumiy summani qayta hisoblash
+    # Umumiy summani qayta hisoblash va to'lov holatini yangilash
     order.recalculate_total(save=True)
+    order.update_payment_state(save=True)
+    # Ma'lumotlarni yangilash uchun qayta yuklash
+    order.refresh_from_db()
 
     services = order.service_items.all()
     parts = order.part_items.all()

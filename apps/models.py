@@ -243,6 +243,7 @@ class Order(models.Model):
         paid = self.paid_total
         total = self.total_amount
         # To'lov miqdorini umumiy summa bilan solishtirish
+        status_changed = False
         if paid <= Decimal("0"):
             self.payment_status = PaymentStatus.UNPAID
         elif abs(paid - total) < Decimal("0.01"):  # Kichik farqni e'tiborsiz qoldirish
@@ -250,6 +251,7 @@ class Order(models.Model):
             # To'liq to'langanida avtomatik yakunlangan deb belgilash
             if self.status != OrderStatus.COMPLETED:
                 self.status = OrderStatus.COMPLETED
+                status_changed = True
         elif paid < total:
             self.payment_status = PaymentStatus.PARTIAL
         else:
@@ -257,6 +259,14 @@ class Order(models.Model):
             self.payment_status = PaymentStatus.PAID
             if self.status != OrderStatus.COMPLETED:
                 self.status = OrderStatus.COMPLETED
+                status_changed = True
+        
+        # Agar order "completed" bo'lsa, barcha xizmatlarni ham "done" qilish
+        if self.status == OrderStatus.COMPLETED:
+            self.service_items.filter(status__in=[ServiceStatus.IN_PROGRESS, ServiceStatus.CHECKING]).update(
+                status=ServiceStatus.DONE
+            )
+        
         if save:
             self.save(update_fields=["payment_status", "status"])
         return paid
@@ -284,7 +294,6 @@ class OrderService(models.Model):
     class Meta:
         verbose_name = _("Order service")
         verbose_name_plural = _("Order services")
-
     def __str__(self) -> str:
         return f"{self.service} x{self.quantity}"
 
