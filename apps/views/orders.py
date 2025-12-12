@@ -96,7 +96,7 @@ def order_detail(request, pk: int):
         ),
         pk=pk,
     )
-
+    print(order.status)
     # Umumiy summani qayta hisoblash
     order.recalculate_total(save=True)
 

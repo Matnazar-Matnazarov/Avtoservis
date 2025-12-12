@@ -40,15 +40,16 @@
         <div>
             {% if order.status == "new" %}
                 <span class="status-badge-new">Yangi</span>
+            {% elif order.status == "completed" %}
+                <span class="status-badge-completed">Yakunlangan</span>
             {% elif order.status == "in_progress" %}
                 <span class="status-badge-in_progress">Jarayonda</span>
             {% elif order.status == "checking" %}
                 <span class="status-badge-checking">Tekshirilmoqda</span>
-            {% elif order.status == "completed" %}
-                <span class="status-badge-completed">Yakunlangan</span>
+           
             {% else %}
                 <span class="inline-flex items-center rounded-full bg-slate-700 px-2 py-0.5 text-xs text-white">
-                    {{ order.get_status_display }}
+                    {{ order.get_status_display }} 
                 </span>
             {% endif %}
         </div>

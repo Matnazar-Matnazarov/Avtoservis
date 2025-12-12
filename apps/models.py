@@ -232,7 +232,7 @@ class Order(models.Model):
     def paid_total(self):
         return (
             self.payments.aggregate(total=Sum("amount"))["total"]
-            or 0
+            or Decimal("0")
         )
 
     @property
@@ -241,15 +241,16 @@ class Order(models.Model):
 
     def update_payment_state(self, save: bool = True):
         paid = self.paid_total
+        total = self.total_amount
         # To'lov miqdorini umumiy summa bilan solishtirish
-        if paid <= 0:
+        if paid <= Decimal("0"):
             self.payment_status = PaymentStatus.UNPAID
-        elif abs(paid - self.total_amount) < 0.01:  # Kichik farqni e'tiborsiz qoldirish
+        elif abs(paid - total) < Decimal("0.01"):  # Kichik farqni e'tiborsiz qoldirish
             self.payment_status = PaymentStatus.PAID
             # To'liq to'langanida avtomatik yakunlangan deb belgilash
             if self.status != OrderStatus.COMPLETED:
                 self.status = OrderStatus.COMPLETED
-        elif paid < self.total_amount:
+        elif paid < total:
             self.payment_status = PaymentStatus.PARTIAL
         else:
             # To'langan summa katta bo'lsa ham PAID deb belgilash
