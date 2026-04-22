@@ -39,12 +39,12 @@
                 <th class="px-3 py-2 text-right font-medium">Umumiy summa</th>
             </tr>
             </thead>
-            <tbody class="divide-y divide-slate-800">
+            <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
             {% for order in orders %}
-                <tr class="hover:bg-slate-900/70 cursor-pointer"
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70 cursor-pointer"
                     onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
-                    <td class="px-3 py-2 text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
-                    <td class="px-3 py-2 text-slate-100">
+                    <td class="px-3 py-2 text-slate-600 dark:text-slate-400">{{ order.created_at|date:"Y-m-d H:i" }}</td>
+                    <td class="px-3 py-2 text-slate-900 dark:text-slate-100">
                         {{ order.car.plate_number }} · {{ order.car.brand }} {{ order.car.model }}
                     </td>
                     <td class="px-3 py-2">
@@ -62,7 +62,7 @@
                             </span>
                         {% endif %}
                     </td>
-                    <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                    <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
                         {{ order.total_amount|floatformat:0 }} so'm
                     </td>
                 </tr>
@@ -79,7 +79,7 @@
 </div>
 
 <a href="{% url 'apps:customer_list' %}"
-   class="inline-flex items-center rounded-lg border border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-200 hover:bg-slate-800 transition">
+   class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
     ← Mijozlar ro'yxatiga qaytish
 </a>
 {% endblock %}

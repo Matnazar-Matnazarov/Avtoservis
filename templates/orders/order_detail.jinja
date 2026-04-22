@@ -173,7 +173,7 @@
                         <th class="px-3 py-2 text-right font-medium">Jami</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     {% for item in parts %}
                         <tr>
                             <td class="px-3 py-2 text-slate-500 dark:text-slate-400">{{ forloop.counter }}</td>
@@ -183,14 +183,14 @@
                             <td class="px-3 py-2 text-right text-slate-900 dark:text-slate-100">
                                 {{ item.price|floatformat:0 }} so'm
                             </td>
-                            <td class="px-3 py-2 text-right text-slate-300">
+                            <td class="px-3 py-2 text-right text-slate-600 dark:text-slate-300">
                                 {% if item.discount %}
                                     <span class="text-amber-400 font-medium">-{{ item.discount|floatformat:2 }}%</span>
                                 {% else %}
                                     <span class="text-slate-500">—</span>
                                 {% endif %}
                             </td>
-                            <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                            <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
                                 {{ item.line_total|floatformat:0 }} so'm
                             </td>
                         </tr>
@@ -275,7 +275,7 @@
                         <th class="px-3 py-2 text-left font-medium">Izoh</th>
                     </tr>
                     </thead>
-                    <tbody class="divide-y divide-slate-800">
+                    <tbody class="divide-y divide-slate-100 dark:divide-slate-800">
                     {% for p in payments %}
                         <tr>
                             <td class="px-3 py-2 text-slate-500 dark:text-slate-400">
@@ -284,7 +284,7 @@
                             <td class="px-3 py-2 text-slate-900 dark:text-slate-100">
                                 {{ p.get_payment_type_display }}
                             </td>
-                            <td class="px-3 py-2 text-right text-emerald-400 font-semibold">
+                            <td class="px-3 py-2 text-right text-emerald-600 dark:text-emerald-400 font-semibold">
                                 {{ p.amount|floatformat:0 }} so'm
                             </td>
                             <td class="px-3 py-2 text-slate-600 dark:text-slate-300">
@@ -325,7 +325,7 @@
                         {% for p in photos_after %}
                             <a href="{{ p.image.url }}" target="_blank">
                                 <img src="{{ p.image.url }}" alt=""
-                                     class="h-20 w-20 rounded-lg border border-slate-700 object-cover">
+                                     class="h-20 w-20 rounded-lg border border-slate-200 dark:border-slate-700 object-cover">
                             </a>
                         {% endfor %}
                     </div>
