@@ -15,11 +15,11 @@ from .models import (
 )
 
 
-TAILWIND_INPUT = (
-    "w-full rounded-lg border border-slate-700 bg-slate-900/80 px-3 py-2 "
-    "text-sm text-slate-100 placeholder-slate-500 focus:outline-none "
-    "focus:ring-2 focus:ring-emerald-500/60 focus:border-emerald-500"
-)
+TAILWIND_INPUT = "input input-bordered w-full text-sm"
+TAILWIND_SELECT = "select select-bordered w-full text-sm"
+TAILWIND_TEXTAREA = "textarea textarea-bordered w-full min-h-28 text-sm"
+TAILWIND_FILE = "file-input file-input-bordered w-full text-sm"
+TAILWIND_CHECKBOX = "checkbox checkbox-sm"
 
 
 class TailwindModelForm(forms.ModelForm):
@@ -30,9 +30,22 @@ class TailwindModelForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         for field in self.fields.values():
-            css = TAILWIND_INPUT
+            widget = field.widget
+            if isinstance(widget, forms.Select):
+                css = TAILWIND_SELECT
+            elif isinstance(widget, forms.Textarea):
+                css = TAILWIND_TEXTAREA
+            elif isinstance(widget, forms.ClearableFileInput):
+                css = TAILWIND_FILE
+            elif isinstance(widget, forms.CheckboxInput):
+                css = TAILWIND_CHECKBOX
+            else:
+                css = TAILWIND_INPUT
+
             existing = field.widget.attrs.get("class", "")
             field.widget.attrs["class"] = (existing + " " + css).strip()
+            if field.widget.attrs.get("readonly"):
+                field.widget.attrs["class"] += " input-disabled opacity-70 cursor-not-allowed"
 
 
 class CustomerForm(TailwindModelForm):
