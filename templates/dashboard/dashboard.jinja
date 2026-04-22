@@ -1,0 +1,429 @@
+{% extends "base.html" %}
+
+{% block title %}Statistika – Avto Servis{% endblock %}
+
+{% block content %}
+{% load humanize %}
+
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+    <div class="space-y-1">
+        <h1 class="text-xl sm:text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+            Statistika va KPI
+        </h1>
+        <p class="text-xs sm:text-sm text-slate-600 dark:text-slate-400">
+            Umumiy ko'rsatkichlar, daromad dinamikasi va yetakchi pozitsiyalar
+        </p>
+    </div>
+    <div class="flex items-center gap-2">
+        <a href="{% url 'apps:order_create' %}"
+           class="inline-flex items-center gap-1.5 rounded-full bg-emerald-600 hover:bg-emerald-500 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-white shadow-sm shadow-emerald-500/40 transition-colors">
+            + Yangi buyurtma
+        </a>
+    </div>
+</div>
+
+{# ---------- KPI CARDS ---------- #}
+<div class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-4 mb-6">
+    {# Umumiy buyurtmalar #}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+            <span class="text-[11px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Umumiy buyurtmalar</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/10 text-emerald-500 ring-1 ring-emerald-500/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+            </span>
+        </div>
+        <div class="mt-2">
+            <span class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">{{ kpi.total_orders }}</span>
+        </div>
+        <p class="mt-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+            <span class="text-emerald-600 dark:text-emerald-400 font-medium">{{ kpi.completed_orders }}</span> yakunlangan
+            · <span class="text-amber-500 font-medium">{{ kpi.active_orders }}</span> faol
+        </p>
+    </div>
+
+    {# Bugungi daromad #}
+    <div class="rounded-2xl border border-emerald-500/20 bg-gradient-to-br from-emerald-500/10 via-white to-white dark:from-emerald-500/10 dark:via-slate-950 dark:to-slate-950 p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+            <span class="text-[11px] sm:text-xs font-medium uppercase tracking-wider text-emerald-700 dark:text-emerald-300">Bugungi daromad</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-emerald-500/15 text-emerald-500 ring-1 ring-emerald-500/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </span>
+        </div>
+        <div class="mt-2">
+            <span class="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                {{ kpi.today_revenue|floatformat:0|intcomma }}
+            </span>
+            <span class="ml-1 text-xs sm:text-sm text-emerald-700/80 dark:text-emerald-300/80">so'm</span>
+        </div>
+        <p class="mt-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+            {{ kpi.today_orders }} ta buyurtma bugun
+        </p>
+    </div>
+
+    {# Oylik daromad #}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+            <span class="text-[11px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">Joriy oy</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-sky-500/10 text-sky-500 ring-1 ring-sky-500/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+            </span>
+        </div>
+        <div class="mt-2">
+            <span class="text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white">
+                {{ kpi.month_revenue|floatformat:0|intcomma }}
+            </span>
+            <span class="ml-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">so'm</span>
+        </div>
+        <p class="mt-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Boshidan hozirgacha</p>
+    </div>
+
+    {# Qoldiq / outstanding #}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm">
+        <div class="flex items-center justify-between">
+            <span class="text-[11px] sm:text-xs font-medium uppercase tracking-wider text-slate-500 dark:text-slate-400">To'lov qoldig'i</span>
+            <span class="inline-flex h-8 w-8 items-center justify-center rounded-xl bg-amber-500/10 text-amber-500 ring-1 ring-amber-500/30">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </span>
+        </div>
+        <div class="mt-2">
+            <span class="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400">
+                {{ kpi.outstanding|floatformat:0|intcomma }}
+            </span>
+            <span class="ml-1 text-xs sm:text-sm text-slate-500 dark:text-slate-400">so'm</span>
+        </div>
+        <p class="mt-1 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+            {{ kpi.unpaid_orders }} ta buyurtmada to'liq to'lanmagan
+        </p>
+    </div>
+
+    {# Mijozlar / mashinalar / ustalar #}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 sm:p-5 shadow-sm col-span-2 md:col-span-3 xl:col-span-4">
+        <div class="grid grid-cols-3 gap-3 sm:gap-6">
+            <div class="flex items-center gap-3">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-500/10 text-indigo-500 ring-1 ring-indigo-500/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-3-3.87M9 20H4v-2a4 4 0 013-3.87m6-5.13a4 4 0 11-8 0 4 4 0 018 0zm6 3a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </span>
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Mijozlar</p>
+                    <p class="text-xl font-semibold text-slate-900 dark:text-white">{{ kpi.customers_count }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-cyan-500/10 text-cyan-500 ring-1 ring-cyan-500/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 17l-4 4m16-4l4 4M6 13h12l-1-5H7l-1 5zM6 13v4a1 1 0 001 1h1a1 1 0 001-1v-1m6 0v1a1 1 0 001 1h1a1 1 0 001-1v-4"/></svg>
+                </span>
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Mashinalar</p>
+                    <p class="text-xl font-semibold text-slate-900 dark:text-white">{{ kpi.cars_count }}</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-violet-500/10 text-violet-500 ring-1 ring-violet-500/30">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                </span>
+                <div>
+                    <p class="text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400">Ustalar</p>
+                    <p class="text-xl font-semibold text-slate-900 dark:text-white">{{ kpi.masters_count }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ---------- CHART + STATUS ---------- #}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+    {# Daromad dinamikasi – 14 kun #}
+    <div class="lg:col-span-2 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Daromad dinamikasi</h2>
+                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Oxirgi 14 kun</p>
+            </div>
+            <span class="inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-2.5 py-1 text-[11px] font-medium ring-1 ring-emerald-500/30">
+                <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                Kunlik daromad (so'm)
+            </span>
+        </div>
+
+        <div class="relative h-56 sm:h-64">
+            <canvas id="revenue-chart" class="w-full h-full"></canvas>
+        </div>
+
+        <div class="mt-4 flex flex-wrap items-center justify-between gap-2 text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">
+            <span>Maksimal kun: <span class="font-semibold text-slate-700 dark:text-slate-200">{{ max_daily_revenue|floatformat:0|intcomma }} so'm</span></span>
+            <span>Davr: <span class="font-semibold text-slate-700 dark:text-slate-200">{{ daily_labels|first }} – {{ daily_labels|last }}</span></span>
+        </div>
+    </div>
+
+    {# Status taqsimoti #}
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Statuslar</h2>
+                <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Buyurtmalar holati</p>
+            </div>
+        </div>
+        <ul class="space-y-3">
+            {% for s in status_stats %}
+                <li>
+                    <div class="flex items-center justify-between text-xs sm:text-sm">
+                        <span class="font-medium text-slate-700 dark:text-slate-200">{{ s.label }}</span>
+                        <span class="font-semibold text-slate-900 dark:text-white">{{ s.count }}</span>
+                    </div>
+                    <div class="mt-1.5 h-2 w-full rounded-full bg-slate-200/60 dark:bg-slate-800/80 overflow-hidden">
+                        <div class="h-full rounded-full
+                            {% if s.code == 'new' %}bg-slate-500
+                            {% elif s.code == 'in_progress' %}bg-amber-500
+                            {% elif s.code == 'checking' %}bg-sky-500
+                            {% elif s.code == 'completed' %}bg-emerald-500
+                            {% else %}bg-slate-500{% endif %}"
+                             style="width: {{ s.percent }}%"></div>
+                    </div>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{# ---------- TOP LISTS ---------- #}
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-3 sm:gap-4 mb-6">
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Top xizmatlar</h2>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">30 kun</span>
+        </div>
+        <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+            {% for row in top_services %}
+                <li class="flex items-center justify-between py-2.5 text-xs sm:text-sm">
+                    <div class="min-w-0 pr-2">
+                        <p class="truncate font-medium text-slate-800 dark:text-slate-200">{{ row.service__name }}</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">x{{ row.qty }}</p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-emerald-600 dark:text-emerald-400">
+                        {{ row.revenue|floatformat:0|intcomma }} so'm
+                    </span>
+                </li>
+            {% empty %}
+                <li class="py-8 text-center text-xs text-slate-500 dark:text-slate-400">Ma'lumot topilmadi</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Top ehtiyot qismlar</h2>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">30 kun</span>
+        </div>
+        <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+            {% for row in top_parts %}
+                <li class="flex items-center justify-between py-2.5 text-xs sm:text-sm">
+                    <div class="min-w-0 pr-2">
+                        <p class="truncate font-medium text-slate-800 dark:text-slate-200">{{ row.part__name }}</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                            {{ row.part__article }} · x{{ row.qty }}
+                        </p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-emerald-600 dark:text-emerald-400">
+                        {{ row.revenue|floatformat:0|intcomma }} so'm
+                    </span>
+                </li>
+            {% empty %}
+                <li class="py-8 text-center text-xs text-slate-500 dark:text-slate-400">Ma'lumot topilmadi</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm p-4 sm:p-6">
+        <div class="flex items-center justify-between mb-3">
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Top ustalar</h2>
+            <span class="text-[11px] text-slate-500 dark:text-slate-400">30 kun</span>
+        </div>
+        <ul class="divide-y divide-slate-200 dark:divide-slate-800">
+            {% for m in top_masters %}
+                <li class="flex items-center justify-between py-2.5 text-xs sm:text-sm">
+                    <div class="min-w-0 pr-2">
+                        <p class="truncate font-medium text-slate-800 dark:text-slate-200">{{ m.full_name }}</p>
+                        <p class="text-[11px] text-slate-500 dark:text-slate-400">
+                            {{ m.specialization|default:"—" }} · {{ m.orders_count }} buyurtma
+                        </p>
+                    </div>
+                    <span class="shrink-0 font-semibold text-emerald-600 dark:text-emerald-400">
+                        {{ m.revenue|floatformat:0|intcomma }} so'm
+                    </span>
+                </li>
+            {% empty %}
+                <li class="py-8 text-center text-xs text-slate-500 dark:text-slate-400">Ma'lumot topilmadi</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
+{# ---------- RECENT ORDERS ---------- #}
+<div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 shadow-sm">
+    <div class="flex items-center justify-between px-4 sm:px-6 py-4 border-b border-slate-200 dark:border-slate-800">
+        <div>
+            <h2 class="text-sm sm:text-base font-semibold text-slate-900 dark:text-white">Oxirgi buyurtmalar</h2>
+            <p class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400">Eng so'nggi 6 ta</p>
+        </div>
+        <a href="{% url 'apps:order_list' %}"
+           class="text-xs font-medium text-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:hover:text-emerald-300">
+            Barchasi →
+        </a>
+    </div>
+    <div class="overflow-x-auto">
+        <table class="w-full text-xs sm:text-sm">
+            <thead>
+            <tr class="text-left text-[11px] uppercase tracking-wider text-slate-500 dark:text-slate-400 bg-slate-50/80 dark:bg-slate-900/60">
+                <th class="px-4 py-2.5">ID</th>
+                <th class="px-4 py-2.5">Mijoz</th>
+                <th class="px-4 py-2.5 hidden sm:table-cell">Mashina</th>
+                <th class="px-4 py-2.5">Status</th>
+                <th class="px-4 py-2.5 text-right">Summa</th>
+            </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200 dark:divide-slate-800">
+            {% for order in recent_orders %}
+                <tr class="hover:bg-slate-50 dark:hover:bg-slate-900/70 cursor-pointer transition-colors"
+                    onclick="window.location='{% url 'apps:order_detail' order.pk %}'">
+                    <td class="px-4 py-3 font-medium text-slate-700 dark:text-slate-200">#{{ order.id }}</td>
+                    <td class="px-4 py-3 text-slate-800 dark:text-slate-100">{{ order.customer.full_name }}</td>
+                    <td class="px-4 py-3 text-slate-600 dark:text-slate-300 hidden sm:table-cell">
+                        {{ order.car.plate_number }} · <span class="text-slate-500">{{ order.car.brand }}</span>
+                    </td>
+                    <td class="px-4 py-3">
+                        {% if order.status == "new" %}<span class="status-badge-new">Yangi</span>
+                        {% elif order.status == "in_progress" %}<span class="status-badge-in_progress">Jarayonda</span>
+                        {% elif order.status == "checking" %}<span class="status-badge-checking">Tekshirilmoqda</span>
+                        {% elif order.status == "completed" %}<span class="status-badge-completed">Yakunlangan</span>
+                        {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-right font-semibold text-emerald-600 dark:text-emerald-400">
+                        {{ order.total_amount|floatformat:0|intcomma }}
+                        <span class="text-slate-500 dark:text-slate-400 font-normal">so'm</span>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5" class="px-4 py-8 text-center text-xs text-slate-500 dark:text-slate-400">
+                        Buyurtmalar yo'q
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+{{ daily_labels|json_script:"dash-labels" }}
+{{ daily_revenue|json_script:"dash-revenue" }}
+{{ daily_orders|json_script:"dash-orders" }}
+<script>
+(function () {
+    const labels = JSON.parse(document.getElementById('dash-labels').textContent);
+    const revenue = JSON.parse(document.getElementById('dash-revenue').textContent);
+    const orders = JSON.parse(document.getElementById('dash-orders').textContent);
+    const canvas = document.getElementById('revenue-chart');
+    if (!canvas) return;
+
+    function draw() {
+        const dpr = window.devicePixelRatio || 1;
+        const rect = canvas.getBoundingClientRect();
+        canvas.width = rect.width * dpr;
+        canvas.height = rect.height * dpr;
+        const ctx = canvas.getContext('2d');
+        ctx.scale(dpr, dpr);
+        const w = rect.width;
+        const h = rect.height;
+
+        const isDark = document.documentElement.classList.contains('dark');
+        const grid = isDark ? 'rgba(148,163,184,0.12)' : 'rgba(100,116,139,0.18)';
+        const textC = isDark ? 'rgba(203,213,225,0.75)' : 'rgba(71,85,105,0.8)';
+        const barFrom = isDark ? 'rgba(16,185,129,0.95)' : 'rgba(16,185,129,0.9)';
+        const barTo = isDark ? 'rgba(6,95,70,0.45)' : 'rgba(16,185,129,0.15)';
+
+        const paddingLeft = 40, paddingRight = 10, paddingTop = 12, paddingBottom = 24;
+        const plotW = w - paddingLeft - paddingRight;
+        const plotH = h - paddingTop - paddingBottom;
+
+        const maxRev = Math.max(1, ...revenue);
+        const niceMax = maxRev;
+
+        ctx.clearRect(0, 0, w, h);
+
+        // grid lines
+        ctx.strokeStyle = grid;
+        ctx.lineWidth = 1;
+        ctx.font = '10px system-ui, sans-serif';
+        ctx.fillStyle = textC;
+        ctx.textAlign = 'right';
+        ctx.textBaseline = 'middle';
+        const steps = 4;
+        for (let i = 0; i <= steps; i++) {
+            const y = paddingTop + (plotH * i) / steps;
+            const val = niceMax * (1 - i / steps);
+            ctx.beginPath();
+            ctx.moveTo(paddingLeft, y);
+            ctx.lineTo(w - paddingRight, y);
+            ctx.stroke();
+            ctx.fillText(formatShort(val), paddingLeft - 6, y);
+        }
+
+        // bars
+        const barGap = 6;
+        const barW = (plotW - barGap * (labels.length - 1)) / labels.length;
+        for (let i = 0; i < labels.length; i++) {
+            const val = revenue[i] || 0;
+            const bh = niceMax > 0 ? (val / niceMax) * plotH : 0;
+            const x = paddingLeft + i * (barW + barGap);
+            const y = paddingTop + plotH - bh;
+            const grad = ctx.createLinearGradient(x, y, x, y + bh);
+            grad.addColorStop(0, barFrom);
+            grad.addColorStop(1, barTo);
+            ctx.fillStyle = grad;
+            roundRect(ctx, x, y, barW, bh, Math.min(6, barW / 2));
+            ctx.fill();
+        }
+
+        // x-axis labels
+        ctx.fillStyle = textC;
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'top';
+        const skip = labels.length > 10 ? 2 : 1;
+        for (let i = 0; i < labels.length; i++) {
+            if (i % skip !== 0 && i !== labels.length - 1) continue;
+            const x = paddingLeft + i * (barW + barGap) + barW / 2;
+            ctx.fillText(labels[i], x, paddingTop + plotH + 6);
+        }
+    }
+
+    function roundRect(ctx, x, y, w, h, r) {
+        if (h < 1) { ctx.beginPath(); ctx.rect(x, y, w, Math.max(0, h)); return; }
+        r = Math.min(r, w / 2, h);
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h);
+        ctx.lineTo(x, y + h);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+    }
+
+    function formatShort(v) {
+        if (v >= 1_000_000) return (v / 1_000_000).toFixed(1) + 'M';
+        if (v >= 1_000) return Math.round(v / 1_000) + 'K';
+        return Math.round(v).toString();
+    }
+
+    draw();
+    window.addEventListener('resize', draw);
+
+    // Redraw when theme toggles
+    const btn = document.getElementById('theme-toggle');
+    if (btn) btn.addEventListener('click', () => setTimeout(draw, 50));
+})();
+</script>
+{% endblock %}

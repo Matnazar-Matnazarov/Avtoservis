@@ -1,13 +1,25 @@
 {% load static %}
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" data-theme="night" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Avto Servis{% endblock %}</title>
+    <script>
+        (function () {
+            try {
+                var t = localStorage.getItem('theme') || 'dark';
+                var isLight = t === 'light';
+                var r = document.documentElement;
+                r.setAttribute('data-theme', isLight ? 'corporate' : 'night');
+                r.classList.toggle('dark', !isLight);
+            } catch (e) {}
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -22,7 +34,6 @@
     </script>
     <link href="https://cdn.jsdelivr.net/npm/daisyui@4.12.10/dist/full.min.css" rel="stylesheet" type="text/css" />
     <style>
-        /* Tailwind CDN @apply ishlamaydi, shu sababli oddiy CSS bilan badge-style beramiz */
         .status-badge-new,
         .status-badge-in_progress,
         .status-badge-checking,
@@ -30,190 +41,56 @@
             border-radius: 9999px;
             padding: 2px 8px;
             font-size: 0.75rem;
-            font-weight: 500;
+            font-weight: 600;
             line-height: 1;
             display: inline-flex;
             align-items: center;
         }
         .status-badge-new {
-            background-color: rgb(100 116 139); /* slate-500 */
+            background-color: rgb(100 116 139);
             color: white;
         }
         .status-badge-in_progress {
-            background-color: rgb(250 204 21); /* amber-400 */
-            color: rgb(15 23 42); /* slate-900 */
+            background-color: rgb(250 204 21);
+            color: rgb(15 23 42);
         }
         .status-badge-checking {
-            background-color: rgb(34 211 238); /* cyan-400 */
+            background-color: rgb(34 211 238);
             color: rgb(15 23 42);
         }
         .status-badge-completed {
-            background-color: rgb(16 185 129); /* emerald-500 */
+            background-color: rgb(16 185 129);
             color: white;
-        }
-
-        /* Theme (dark / light) */
-        body[data-theme="dark"] {
-            background-color: rgb(2 6 23); /* slate-950 */
-            color: rgb(241 245 249); /* slate-100 */
-        }
-        body[data-theme="light"] {
-            background-color: rgb(248 250 252); /* slate-50 */
-            color: rgb(15 23 42); /* slate-900 */
-        }
-        
-        /* Light mode - Background colors */
-        body[data-theme="light"] .bg-slate-950\/60,
-        body[data-theme="light"] .bg-slate-950 {
-            background-color: white !important;
-        }
-        body[data-theme="light"] .bg-slate-900\/80,
-        body[data-theme="light"] .bg-slate-900 {
-            background-color: rgb(248 250 252) !important; /* slate-50 */
-        }
-        body[data-theme="light"] .bg-slate-800\/50,
-        body[data-theme="light"] .bg-slate-800 {
-            background-color: rgb(241 245 249) !important; /* slate-100 */
-        }
-        
-        /* Light mode - Border colors */
-        body[data-theme="light"] .border-slate-800 {
-            border-color: rgb(203 213 225) !important; /* slate-300 */
-        }
-        body[data-theme="light"] .border-slate-700 {
-            border-color: rgb(226 232 240) !important; /* slate-200 */
-        }
-        
-        /* Light mode - Text colors */
-        body[data-theme="light"] .text-white {
-            color: rgb(15 23 42) !important; /* slate-900 */
-        }
-        body[data-theme="light"] .text-slate-100,
-        body[data-theme="light"] .text-slate-200 {
-            color: rgb(15 23 42) !important; /* slate-900 */
-        }
-        body[data-theme="light"] .text-slate-300 {
-            color: rgb(51 65 85) !important; /* slate-700 */
-        }
-        body[data-theme="light"] .text-slate-400 {
-            color: rgb(71 85 105) !important; /* slate-600 */
-        }
-        body[data-theme="light"] .text-slate-500 {
-            color: rgb(100 116 139) !important; /* slate-500 */
-        }
-        
-        /* Light mode - Header */
-        body[data-theme="light"] header {
-            background-color: white !important;
-            border-color: rgb(226 232 240) !important;
-        }
-        body[data-theme="light"] header .text-slate-300 {
-            color: rgb(71 85 105) !important;
-        }
-        body[data-theme="light"] header .hover\:text-white:hover {
-            color: rgb(15 23 42) !important;
-        }
-        
-        /* Light mode - Input fields */
-        body[data-theme="light"] .input,
-        body[data-theme="light"] .select {
-            background-color: white !important;
-            border-color: rgb(226 232 240) !important;
-            color: rgb(15 23 42) !important;
-        }
-        body[data-theme="light"] .input::placeholder,
-        body[data-theme="light"] .select::placeholder {
-            color: rgb(148 163 184) !important; /* slate-400 */
-        }
-        body[data-theme="light"] .input:focus,
-        body[data-theme="light"] .select:focus {
-            border-color: rgb(16 185 129) !important; /* emerald-500 */
-        }
-        
-        /* Light mode - Buttons */
-        body[data-theme="light"] .btn-outline {
-            border-color: rgb(226 232 240) !important;
-            color: rgb(51 65 85) !important;
-        }
-        body[data-theme="light"] .btn-outline:hover {
-            background-color: rgb(241 245 249) !important;
-            border-color: rgb(203 213 225) !important;
-        }
-        
-        /* Light mode - Table */
-        body[data-theme="light"] .table thead {
-            background-color: rgb(248 250 252) !important;
-        }
-        body[data-theme="light"] .table tbody tr:hover {
-            background-color: rgb(241 245 249) !important;
-        }
-        body[data-theme="light"] .table-zebra tbody tr:nth-child(even) {
-            background-color: rgb(251 252 253) !important;
-        }
-        
-        /* Light mode - Card/Container backgrounds */
-        body[data-theme="light"] .shadow-xl {
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
-        }
-        
-        /* Light mode - Date input color scheme */
-        body[data-theme="light"] input[type="date"] {
-            color-scheme: light;
-        }
-        
-        /* Light mode - Table zebra striping */
-        body[data-theme="light"] .table-zebra tbody tr:nth-child(even) {
-            background-color: rgb(248 250 252) !important; /* slate-50 */
-        }
-        
-        /* Light mode - Messages */
-        body[data-theme="light"] .border-emerald-600 {
-            border-color: rgb(5 150 105) !important;
-        }
-        body[data-theme="light"] .bg-emerald-500\/10 {
-            background-color: rgb(209 250 229) !important; /* emerald-100 */
-        }
-        body[data-theme="light"] .text-emerald-200 {
-            color: rgb(5 150 105) !important; /* emerald-600 */
-        }
-        body[data-theme="light"] .border-red-600 {
-            border-color: rgb(220 38 38) !important;
-        }
-        body[data-theme="light"] .bg-red-500\/10 {
-            background-color: rgb(254 226 226) !important; /* red-100 */
-        }
-        body[data-theme="light"] .text-red-200 {
-            color: rgb(220 38 38) !important; /* red-600 */
-        }
-        body[data-theme="light"] .border-slate-600 {
-            border-color: rgb(148 163 184) !important; /* slate-400 */
-        }
-        body[data-theme="light"] .bg-slate-800\/60 {
-            background-color: rgb(241 245 249) !important; /* slate-100 */
-        }
-        body[data-theme="light"] .text-slate-200 {
-            color: rgb(51 65 85) !important; /* slate-700 */
         }
     </style>
     {% block extra_head %}{% endblock %}
 </head>
-<body class="min-h-screen text-slate-100" data-theme="dark">
+<body class="min-h-screen bg-base-200 text-base-content">
 <div class="min-h-screen flex flex-col">
-    <header class="border-b border-slate-200 dark:border-slate-800 bg-white/80 dark:bg-slate-950/80 backdrop-blur">
-        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 h-16 lg:h-20 flex items-center justify-between">
+    <header class="border-b border-base-300/80 bg-base-100/90 backdrop-blur">
+        <div class="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10 xl:px-14 h-16 lg:h-20 flex items-center justify-between">
             <div class="flex items-center gap-3 sm:gap-6">
                 <a href="{% url 'apps:order_list' %}" class="inline-flex items-center gap-2">
                     <span class="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-500/10 ring-1 ring-emerald-500/40">
                         <span class="text-xl">🚗</span>
                     </span>
-                    <span class="hidden sm:flex flex-col leading-tight">
-                        <span class="text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-white">Avto Servis Panel</span>
-                        <span class="hidden sm:inline text-[11px] text-slate-500 dark:text-slate-400">Buyurtmalarni boshqarish tizimi</span>
+                    <span class="hidden sm:flex flex-col leading-tight whitespace-nowrap">
+                        <span class="text-sm sm:text-base font-semibold tracking-tight text-slate-900 dark:text-white">Avto Servis</span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400">Boshqaruv paneli</span>
                     </span>
-                    <span class="sm:hidden text-sm font-semibold text-slate-900 dark:text-white">Avto Servis</span>
+                    <span class="sm:hidden text-sm font-semibold text-slate-900 dark:text-white whitespace-nowrap">Avto Servis</span>
                 </a>
 
-                <nav class="hidden md:flex items-center gap-1 text-sm font-medium">
+                <nav class="hidden lg:flex items-center gap-1 text-sm font-medium">
+                    <a href="{% url 'apps:dashboard' %}"
+                       class="inline-flex items-center rounded-full px-3 py-1.5 text-xs sm:text-sm transition
+                              {% if request.path|slice:':11' == '/dashboard/' %}
+                                  bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900
+                              {% else %}
+                                  text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-300 dark:hover:bg-slate-800 dark:hover:text-white
+                              {% endif %}">
+                        Statistika
+                    </a>
                     <a href="{% url 'apps:order_list' %}"
                        class="inline-flex items-center rounded-full px-3 py-1.5 text-xs sm:text-sm transition
                               {% if request.path == '/' or request.path|slice:':7' == '/order/' or request.path|slice:':9' == '/reports/' %}
@@ -281,8 +158,15 @@
                     </div>
                 {% endif %}
 
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a href="{% url 'admin:index' %}"
+                       class="hidden sm:inline-flex items-center justify-center rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900/70 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                        Admin
+                    </a>
+                {% endif %}
+
                 <button type="button" id="theme-toggle"
-                        class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 text-sm shadow-sm hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition">
+                        class="btn btn-sm btn-circle btn-outline border-base-300 text-base-content">
                     🌙
                 </button>
 
@@ -293,8 +177,8 @@
                     </a>
                 {% endif %}
 
-                <div class="md:hidden">
-                    <button type="button" class="inline-flex h-8 w-8 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 shadow-sm hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800 transition" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
+                <div class="lg:hidden">
+                    <button type="button" class="btn btn-sm btn-circle btn-outline border-base-300" onclick="document.getElementById('mobile-menu').classList.toggle('hidden')">
                         <span class="sr-only">Menyuni ochish</span>
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4">
                             <line x1="4" y1="6" x2="20" y2="6" />
@@ -306,8 +190,17 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="md:hidden border-t border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-slate-950/95 backdrop-blur px-4 sm:px-6 lg:px-8 py-3 hidden">
+        <div id="mobile-menu" class="lg:hidden border-t border-base-300 bg-base-100/95 backdrop-blur px-4 sm:px-6 lg:px-10 xl:px-14 py-3 hidden">
             <nav class="flex flex-col gap-1 text-sm font-medium text-slate-800 dark:text-slate-200">
+                <a href="{% url 'apps:dashboard' %}"
+                   class="inline-flex items-center justify-between rounded-lg px-3 py-2 transition
+                          {% if request.path|slice:':11' == '/dashboard/' %}
+                              bg-slate-900 text-white shadow-sm dark:bg-slate-100 dark:text-slate-900
+                          {% else %}
+                              hover:bg-slate-100 dark:hover:bg-slate-800
+                          {% endif %}">
+                    <span>Statistika</span>
+                </a>
                 <a href="{% url 'apps:order_list' %}"
                    class="inline-flex items-center justify-between rounded-lg px-3 py-2 transition
                           {% if request.path == '/' or request.path|slice:':7' == '/order/' or request.path|slice:':9' == '/reports/' %}
@@ -362,6 +255,12 @@
                           {% endif %}">
                     <span>Detallar</span>
                 </a>
+                {% if request.user.is_authenticated and request.user.is_staff %}
+                    <a href="{% url 'admin:index' %}"
+                       class="inline-flex items-center justify-between rounded-lg px-3 py-2 transition hover:bg-slate-100 dark:hover:bg-slate-800">
+                        <span>Admin</span>
+                    </a>
+                {% endif %}
                 {% if request.user.is_authenticated %}
                     <div class="mt-2 flex items-center justify-between rounded-lg border border-slate-200 dark:border-slate-700 px-3 py-2">
                         <div class="flex items-center gap-2">
@@ -381,14 +280,14 @@
     </header>
 
     <main class="flex-1">
-        <div class="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8 py-6">
+        <div class="mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-10 xl:px-14 py-6">
             {% if messages %}
                 <div class="mb-4 space-y-2">
                     {% for message in messages %}
-                        <div class="rounded-lg border px-3 py-2 text-xs sm:text-sm
-                                    {% if message.tags == 'success' %}border-emerald-600 bg-emerald-500/10 text-emerald-200
-                                    {% elif message.tags == 'error' or message.tags == 'danger' %}border-red-600 bg-red-500/10 text-red-200
-                                    {% else %}border-slate-600 bg-slate-800/60 text-slate-200{% endif %}">
+                        <div class="alert py-2 text-xs sm:text-sm
+                                    {% if message.tags == 'success' %}alert-success
+                                    {% elif message.tags == 'error' or message.tags == 'danger' %}alert-error
+                                    {% else %}alert-info{% endif %}">
                             {{ message }}
                         </div>
                     {% endfor %}
@@ -403,20 +302,28 @@
 {% block extra_js %}{% endblock %}
 <script>
     (function () {
-        const body = document.body;
-        const stored = localStorage.getItem('theme');
-        if (stored === 'light') {
-            body.dataset.theme = 'light';
-        }
+        const root = document.documentElement;
+        const stored = localStorage.getItem('theme') || 'dark';
+        const applyTheme = (theme) => {
+            const isLight = theme === 'light';
+            root.setAttribute('data-theme', isLight ? 'corporate' : 'night');
+            if (isLight) {
+                root.classList.remove('dark');
+            } else {
+                root.classList.add('dark');
+            }
+        };
+        applyTheme(stored);
         const btn = document.getElementById('theme-toggle');
         if (btn) {
             const syncIcon = () => {
-                btn.textContent = body.dataset.theme === 'light' ? '☀️' : '🌙';
+                btn.textContent = root.getAttribute('data-theme') === 'corporate' ? '☀️' : '🌙';
             };
             syncIcon();
             btn.addEventListener('click', function () {
-                body.dataset.theme = body.dataset.theme === 'light' ? 'dark' : 'light';
-                localStorage.setItem('theme', body.dataset.theme);
+                const nextTheme = root.getAttribute('data-theme') === 'corporate' ? 'dark' : 'light';
+                applyTheme(nextTheme);
+                localStorage.setItem('theme', nextTheme);
                 syncIcon();
             });
         }

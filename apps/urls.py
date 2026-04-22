@@ -27,11 +27,13 @@ from .views.services import (
     part_create,
     part_update,
 )
+from .views.dashboard import dashboard
 
 app_name = "apps"
 
 urlpatterns = [
     path("", order_list, name="order_list"),
+    path("dashboard/", dashboard, name="dashboard"),
     path("order/<int:pk>/", order_detail, name="order_detail"),
     path("order/new/", order_create, name="order_create"),
     path("order/<int:pk>/edit/", order_update, name="order_update"),
