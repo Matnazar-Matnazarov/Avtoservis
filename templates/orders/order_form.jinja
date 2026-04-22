@@ -159,6 +159,7 @@
     <div class="rounded-2xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-slate-950/60 p-4 space-y-3 shadow-sm">
         <h2 class="text-sm font-semibold text-slate-900 dark:text-slate-200">Fotosuratlar</h2>
         {{ photo_formset.management_form }}
+        <div id="photo-container" class="space-y-2">
         {% for f in photo_formset %}
             <div class="grid grid-cols-1 md:grid-cols-3 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 mb-2 bg-white dark:bg-slate-900/40 shadow-sm"
                  data-formset-prefix="photos">
@@ -178,6 +179,7 @@
                 {% endif %}
             </div>
         {% endfor %}
+        </div>
         <button type="button" id="add-photo-row"
                 class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             + Foto qo'shish
@@ -190,6 +192,7 @@
             Buyurtma bo'yicha bo'lib-bo'lib to'lovlarni kiriting. To'liq to'langanda holat avtomatik yangilanadi.
         </p>
         {{ payment_formset.management_form }}
+        <div id="payment-container" class="space-y-2">
         {% for f in payment_formset %}
             <div class="grid grid-cols-1 md:grid-cols-4 gap-2 items-end border border-slate-200 dark:border-slate-800 rounded-xl p-3 mb-2 bg-white dark:bg-slate-900/40 shadow-sm"
                  data-formset-prefix="payments">
@@ -213,6 +216,7 @@
                 {% endif %}
             </div>
         {% endfor %}
+        </div>
         <button type="button" id="add-payment-row"
                 class="inline-flex items-center rounded-full border border-slate-300 dark:border-slate-700 px-3.5 py-1.5 text-xs font-medium text-slate-700 dark:text-slate-200 bg-white dark:bg-slate-900/70 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors shadow-sm">
             + To'lov qo'shish
@@ -327,33 +331,34 @@
     }
 
     // Setup formset add button with enhanced functionality
-    function setupFormsetAddButton(prefix, addButtonId, isService = false) {
+    function setupFormsetAddButton(prefix, addButtonId, containerId, options = {}) {
         const addBtn = document.getElementById(addButtonId);
         if (!addBtn) return;
-        
+
+        const { totalSelector = null, onNewRow = null } = options;
+
         addBtn.addEventListener('click', function () {
             const totalFormsInput = document.querySelector(`input[name="${prefix}-TOTAL_FORMS"]`);
             if (!totalFormsInput) {
                 console.error('Total forms input not found');
                 return;
             }
-            
+
             const total = parseInt(totalFormsInput.value, 10);
-            const containerId = isService ? 'services-container' : 'parts-container';
             const container = document.getElementById(containerId);
-            
+
             if (!container) {
                 console.error('Container not found:', containerId);
                 return;
             }
-            
+
             const formRows = container.querySelectorAll(`div[data-formset-prefix="${prefix}"]`);
-            
+
             if (formRows.length === 0) {
                 console.error('No form rows found');
                 return;
             }
-            
+
             const lastRow = formRows[formRows.length - 1];
             const newRow = lastRow.cloneNode(true);
 
@@ -376,7 +381,7 @@
             });
 
             // Reset total display
-            const totalDiv = newRow.querySelector(isService ? '.service-total' : '.part-total');
+            const totalDiv = totalSelector ? newRow.querySelector(totalSelector) : null;
             if (totalDiv) totalDiv.textContent = '0 so\'m';
 
             // Reset discount to 0 for services and parts
@@ -388,10 +393,8 @@
             totalFormsInput.value = total + 1;
 
             // Setup event listeners for new row
-            if (isService) {
-                setupServiceRowEvents(newRow);
-            } else {
-                setupPartRowEvents(newRow);
+            if (typeof onNewRow === 'function') {
+                onNewRow(newRow);
             }
         });
     }
@@ -476,10 +479,16 @@
         });
 
         // Setup add buttons
-        setupFormsetAddButton('services', 'add-service-row', true);
-        setupFormsetAddButton('parts', 'add-part-row', false);
-        setupFormsetAddButton('photos', 'add-photo-row', false);
-        setupFormsetAddButton('payments', 'add-payment-row', false);
+        setupFormsetAddButton('services', 'add-service-row', 'services-container', {
+            totalSelector: '.service-total',
+            onNewRow: setupServiceRowEvents,
+        });
+        setupFormsetAddButton('parts', 'add-part-row', 'parts-container', {
+            totalSelector: '.part-total',
+            onNewRow: setupPartRowEvents,
+        });
+        setupFormsetAddButton('photos', 'add-photo-row', 'photo-container');
+        setupFormsetAddButton('payments', 'add-payment-row', 'payment-container');
     });
 </script>
 {% endblock %}
